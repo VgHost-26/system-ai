@@ -2,7 +2,7 @@ import React from 'react'
 
 export const SelectFitFun = () => {
   return (
-    <div id="selectFitFun">
+    <div id="selectFitFun" className='section'>
 
       <label htmlFor='selectFitFunInput'>Algorytm: </label>
       <select id='selectFitFunInput' defaultValue={'default'}>

@@ -17,7 +17,7 @@ export const AddAlgo = () => {
   }
 
   return (
-    <div id="addAlgo">
+    <div id="addAlgo" className='section'>
       <form onSubmit={e => handleSubmit(e)}>
         Dodaj Algorytm
         <hr />

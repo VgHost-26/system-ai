@@ -2,7 +2,7 @@ import React from 'react'
 
 export const SelectAlgo = () => {
   return (
-    <div id="selectAlgo">
+    <div id="selectAlgo" className='section'>
 
       <label htmlFor='selectAlgoInput'>Algorytm: </label>
       <select id='selectAlgoInput' defaultValue={'default'}>

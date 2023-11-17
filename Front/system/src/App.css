@@ -1,7 +1,13 @@
-:root {}
+:root {
+  --b-radius-small: 5px;
+  --b-radius-med: 10px;
+  --b-radius-big: 20px;
+  --pantone: #F3E600;
+
+}
 
 body {
-  margin: 0;
+  margin: 10px;
   box-sizing: border-box;
 }
 
@@ -10,9 +16,11 @@ body {
 }
 
 
+
 #root {
+  --gap: 10px;
   display: grid;
-  height: 100svh;
+  height: calc(100svh - var(--gap) * 2);
   min-width: 600px;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 20% 20% 1fr;
@@ -20,6 +28,14 @@ body {
     'algo      fitfun'
     'add-algo  add-fitfun'
     'results   results';
+  gap: var(--gap);
+}
+
+.section {
+  background-color: #242424;
+  border-radius: var(--b-radius-med);
+  padding: 30px;
+  /* clip-path: polygon(10% 0%, 100% 0, 100% 0, 100% 80%, 90% 100%, 0 100%, 0 100%, 0% 20%); */
 }
 
 #selectAlgo {
@@ -51,8 +67,8 @@ body {
 
 #helpButton {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 10px;
+  right: 10px;
 
   padding: .5em 1em;
 
@@ -61,4 +77,6 @@ body {
   font-weight: bold;
   font-size: 1.5em;
 
+  box-shadow: 10px -10px var(--pantone);
+  outline: var(--gap) solid var(--pantone);
 }
