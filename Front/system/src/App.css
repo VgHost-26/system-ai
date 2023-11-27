@@ -58,7 +58,12 @@ body {
   width: 3em;
   margin: 0 5px;
 }
-
+#sectionStart{
+  grid-area: run;
+}
+#sectionRestore{
+  grid-area: restore;
+}
 
 #results {
   grid-area: results;

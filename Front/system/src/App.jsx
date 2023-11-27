@@ -6,6 +6,8 @@ import { SelectAlgo } from "./components/SelectAlgo"
 import { SelectFitFun } from "./components/SelectFitFun"
 import { Results } from "./components/Results"
 import { useState } from "react"
+import { Start } from "./components/Start"
+import { Restore } from "./components/Restore"
 function App() {
   const [algos, setAlgos] = useState([
     {
@@ -47,6 +49,8 @@ function App() {
       <SelectFitFun />
       <AddAlgo />
       <AddFitFun />
+      <Start />
+      <Restore />
       <Results />
       <HelpButton />
     </>
