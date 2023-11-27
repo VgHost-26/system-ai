@@ -1,6 +1,11 @@
-import React from "react"
+import React, { useState } from "react"
 
-export const SelectFitFun = fitfuns => {
+export const SelectFitFun = ({ fitfuns = [] }) => {
+  const [selfitfun, setSelFitfun] = useState()
+
+  const chandleSelect = e => {
+    setSelFitfun(fitfuns.find(i => i.name === e.target.value))
+  }
   return (
     <div id='selectFitFun' className='section'>
       <p className='sectionTitle'>Wybierz Funkcje Celu</p>
@@ -9,12 +14,22 @@ export const SelectFitFun = fitfuns => {
         Funkcja Celu:{" "}
       </label>
 
-      <select id='selectFitFunInput' defaultValue={"default"}>
+      <select
+        id='selectFitFunInput'
+        defaultValue={"default"}
+        value={selfitfun?.name}
+        onChange={e => chandleSelect(e)}
+      >
         <option value='default' hidden>
           Wybierz funkcje celu
         </option>
-        <option value=''>Sphere</option>
-        <option value=''>Rastragin</option>
+        {fitfuns != [] ? (
+          fitfuns.map(f => {
+            return <option>{f.name}</option>
+          })
+        ) : (
+          <></>
+        )}
       </select>
     </div>
   )

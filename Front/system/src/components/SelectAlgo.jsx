@@ -9,16 +9,6 @@ export const SelectAlgo = ({ algos = [] }) => {
   }
 
   const updateParam = (name, newVal) => {
-    const newParams = params.map(p => {
-      console.log(p.name, "==", name)
-      if (p.name == name) {
-        p.value = newVal
-      }
-    })
-    console.log(newParams)
-    setParams(newParams)
-  }
-  const updateParam2 = (name, newVal) => {
     setParams(
       params.map(p =>
         p.name === name
@@ -89,7 +79,7 @@ export const SelectAlgo = ({ algos = [] }) => {
                       max={p.upperBound}
                       step={p.step}
                       // value={() => getParamVal(p.name)}
-                      onChange={e => updateParam2(p.name, e.target.value)}
+                      onChange={e => updateParam(p.name, e.target.value)}
                     />
                   </label>
                 )

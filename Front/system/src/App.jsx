@@ -9,7 +9,10 @@ import { useState } from "react"
 import { Start } from "./components/Start"
 import { Restore } from "./components/Restore"
 function App() {
-  const [fitfuns, setFitfuns] = useState([{}])
+  const [fitfuns, setFitfuns] = useState([
+    { name: "Sphere", dim: 0 },
+    { name: "Beale", dim: 2 },
+  ])
   const [algos, setAlgos] = useState([
     {
       name: "Archimedes",
