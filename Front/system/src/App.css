@@ -3,14 +3,24 @@
   --b-radius-med: 10px;
   --b-radius-big: 20px;
   --pantone: #F3E600;
-
+  --cp-red:#fc012a;
+  --cp-blue:#00f0ff;
+  --theme-primary-color: #F3E600;
+  --theme-secondary-color: #00f0ff;
 }
 
 body {
   margin: 10px;
   box-sizing: border-box;
+  font-size: 1em;
 }
-
+p{
+  margin: 0;
+}
+input:not([type="number"]), select{
+  /* outline: 1px solid red; */
+  font-size: 1rem;
+}
 .button-circle {
   border-radius: 100%;
 }
@@ -22,30 +32,48 @@ body {
   display: grid;
   height: calc(100svh - var(--gap) * 2);
   min-width: 600px;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr 2fr 1fr;
   grid-template-rows: 20% 20% 1fr;
   grid-template-areas:
     'algo      fitfun       restore'
     'add-algo  add-fitfun   run'
     'results   results      results';
   gap: var(--gap);
+
 }
 
 .section {
   background-color: #242424;
   border-radius: var(--b-radius-med);
   padding: 30px;
+
+  font-size: 1.1rem;
   /* clip-path: polygon(10% 0%, 100% 0, 100% 0, 100% 80%, 90% 100%, 0 100%, 0 100%, 0% 20%); */
 }
-
+.sectionTitle{
+  font-size: 1.5rem;
+  /* color: var(--theme-primary-color); */
+}
+.section>hr{
+  /* border-color: var(--theme-secondary-color); */
+}
 #selectAlgorithm {
   grid-area: algo;
 }
-
-#addAlgo {
+#selectAlgorithm>.wrapper{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+#addAlgorithm {
   grid-area: add-algo;
 }
-
+input[type="file"]{
+  display: block;
+  margin: 20px 0 ;
+}
+#addAlgorithm label>*,#addFitFun label>*{
+  margin-right: 10px;
+}
 #addFitFun {
   grid-area: add-fitfun;
 }
@@ -53,7 +81,20 @@ body {
 #selectFitFun {
   grid-area: fitfun;
 }
-
+#parameters{
+  display: flex;
+  justify-content: space-around;
+}
+.desc{
+  display: block;
+  margin-bottom: 5px;
+}
+#parameters>label{
+  display: block;
+  text-align:center;
+  font-style: italic;
+  font-size: .8rem;
+}
 #parameters>label>input {
   width: 3em;
   margin: 0 5px;
@@ -67,7 +108,6 @@ body {
 
 #results {
   grid-area: results;
-
 }
 
 #helpButton {

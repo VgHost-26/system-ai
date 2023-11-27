@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState } from "react"
 
 export const AddAlgo = () => {
-  const [algo, setAlgo] = useState({ 'name': '' })
-  const [algoName, setAlgoName] = useState('')
+  const [algo, setAlgo] = useState({ name: "" })
+  const [algoName, setAlgoName] = useState("")
 
   const handleSubmit = e => {
     e.preventDefault()
@@ -11,26 +11,34 @@ export const AddAlgo = () => {
   }
 
   const handleFileChange = () => {
-    if (newAlgoName.value == '') {
+    if (newAlgoName.value == "") {
       setAlgoName(newAlgo.files[0].name.slice(0, -4))
     }
   }
 
   return (
-    <div id="addAlgo" className='section'>
+    <div id='addAlgorithm' className='section'>
       <form onSubmit={e => handleSubmit(e)}>
-        Dodaj Algorytm
+        <p className='sectionTitle'>Dodaj Algorytm</p>
         <hr />
+        <input
+          id='newAlgo'
+          type='file'
+          accept='.dll'
+          onChange={handleFileChange}
+        />
         <label htmlFor='newAlgoName'>
-          Nazwa:
-          <input id='newAlgoName' type='text' value={algoName} onChange={e => setAlgoName(e.target.value)} />
+          <span>Nazwa:</span>
+          <input
+            id='newAlgoName'
+            type='text'
+            value={algoName}
+            onChange={e => setAlgoName(e.target.value)}
+          />
         </label>
-        <input id='newAlgo' type='file' accept='.dll' onChange={handleFileChange} />
 
-
-        <input type='submit' value={'Dodaj'} />
+        <input type='submit' value={"Dodaj"} />
       </form>
-
     </div>
   )
 }

@@ -9,6 +9,7 @@ import { useState } from "react"
 import { Start } from "./components/Start"
 import { Restore } from "./components/Restore"
 function App() {
+  const [fitfuns, setFitfuns] = useState([{}])
   const [algos, setAlgos] = useState([
     {
       name: "Archimedes",
@@ -46,7 +47,7 @@ function App() {
   return (
     <>
       <SelectAlgo algos={algos} />
-      <SelectFitFun />
+      <SelectFitFun fitfuns={fitfuns} />
       <AddAlgo />
       <AddFitFun />
       <Start />
