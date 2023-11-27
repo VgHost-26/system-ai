@@ -1,17 +1,19 @@
-import React from 'react'
+import React from "react"
 
-export const HelpButton = () => {
+export const HelpButton = ({ children }) => {
   return (
     <>
       <dialog id='helpDialog'>
-        tutaj będzie cała instrukcja obsługi programu itp
-        <button onClick={()=> helpDialog.close()}>OK</button>
+        {children}
+        <button onClick={() => helpDialog.close()}>OK</button>
       </dialog>
       <button
         id='helpButton'
         className='button-circle'
-        onClick={()=>helpDialog.showModal()}
-      >?</button>
+        onClick={() => helpDialog.showModal()}
+      >
+        ?
+      </button>
     </>
   )
 }

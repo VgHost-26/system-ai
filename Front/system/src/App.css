@@ -18,7 +18,6 @@ p{
   margin: 0;
 }
 input:not([type="number"]), select{
-  /* outline: 1px solid red; */
   font-size: 1rem;
 }
 .button-circle {

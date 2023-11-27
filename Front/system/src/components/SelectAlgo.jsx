@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react"
 
-export const SelectAlgo = ({ algos = [] }) => {
-  const [selAlgo, setSelAlgo] = useState()
-  const [params, setParams] = useState()
+export const SelectAlgo = ({
+  selAlgo,
+  setSelAlgo,
+  params,
+  setParams,
+  algos = [],
+}) => {
+  // const [selAlgo, setSelAlgo] = useState()
+  // const [params, setParams] = useState()
 
   const chandleSelect = e => {
     setSelAlgo(algos.find(i => i.name === e.target.value))
@@ -16,6 +22,7 @@ export const SelectAlgo = ({ algos = [] }) => {
           : { name: p.name, value: p.value }
       )
     )
+    setSelAlgo({ ...selAlgo, params: params })
   }
   const getParamVal = name => {
     params.map(p => {

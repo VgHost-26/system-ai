@@ -47,16 +47,26 @@ function App() {
     },
   ])
 
+  const [selAlgo, setSelAlgo] = useState()
+  const [params, setParams] = useState()
+  const [selFitfun, setSelFitfun] = useState()
+
   return (
     <>
-      <SelectAlgo algos={algos} />
+      <SelectAlgo
+        selAlgo={selAlgo}
+        setSelAlgo={setSelAlgo}
+        params={params}
+        setParams={setParams}
+        algos={algos}
+      />
       <SelectFitFun fitfuns={fitfuns} />
       <AddAlgo />
       <AddFitFun />
-      <Start />
+      <Start selAlgo={selAlgo} selFitfun={selFitfun} />
       <Restore />
       <Results />
-      <HelpButton />
+      <HelpButton>instrukcja</HelpButton>
     </>
   )
 }
