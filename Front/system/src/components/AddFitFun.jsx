@@ -1,12 +1,17 @@
 import React, { useState } from "react"
-export const AddFitFun = () => {
+export const AddFitFun = ({ handleAddFun }) => {
   const [fitfun, setFitfun] = useState({ name: "" })
   const [fitfunName, setFitfunName] = useState("")
 
   const handleSubmit = e => {
     e.preventDefault()
-    setFitfun(newFitFun.files[0])
-    setFitfunName(newFitFunName.value)
+    if (newFitFun.files[0]) {
+      // setFitfun(newFitFun.files[0])
+      handleAddFun(newFitFunName.value, newFitFun.files[0])
+      // clear inputs
+      newFitFun.value = null
+      setFitfunName("")
+    }
   }
 
   const handleFileChange = () => {

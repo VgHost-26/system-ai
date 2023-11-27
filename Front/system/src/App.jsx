@@ -9,6 +9,17 @@ import { useState } from "react"
 import { Start } from "./components/Start"
 import { Restore } from "./components/Restore"
 function App() {
+  function addAlgo(name, newAlgo) {
+    // wysłanie funkcji na serwer
+    // informacja zwrotna
+    // dodanie funkcji do 'algos'
+  }
+  function addFitFun(name, newFun) {
+    // wysłanie funkcji na serwer
+    // informacja zwrotna
+    // dodanie funkcji do 'algos'
+  }
+
   const [fitfuns, setFitfuns] = useState([
     { name: "Sphere", dim: 0 },
     { name: "Beale", dim: 2 },
@@ -60,9 +71,13 @@ function App() {
         setParams={setParams}
         algos={algos}
       />
-      <SelectFitFun fitfuns={fitfuns} />
-      <AddAlgo />
-      <AddFitFun />
+      <SelectFitFun
+        selFitfun={selFitfun}
+        setSelFitfun={setSelFitfun}
+        fitfuns={fitfuns}
+      />
+      <AddAlgo handleAddAlgo={addAlgo} />
+      <AddFitFun handleAddFun={addFitFun} />
       <Start selAlgo={selAlgo} selFitfun={selFitfun} />
       <Restore />
       <Results />

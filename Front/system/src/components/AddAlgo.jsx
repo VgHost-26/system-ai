@@ -1,13 +1,18 @@
 import React, { useState } from "react"
 
-export const AddAlgo = () => {
+export const AddAlgo = ({ handleAddAlgo }) => {
   const [algo, setAlgo] = useState({ name: "" })
   const [algoName, setAlgoName] = useState("")
 
   const handleSubmit = e => {
     e.preventDefault()
-    setAlgo(newAlgo.files[0])
-    setAlgoName(newAlgoName.value)
+    if (newAlgo.value) {
+      // setAlgo(newAlgo.files[0])
+      handleAddAlgo(newAlgoName.value, newAlgo.files[0])
+      // clear inputs
+      setAlgoName("")
+      newAlgo.value = null
+    }
   }
 
   const handleFileChange = () => {

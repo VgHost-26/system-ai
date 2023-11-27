@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 
-export const SelectFitFun = ({ fitfuns = [] }) => {
-  const [selfitfun, setSelFitfun] = useState()
+export const SelectFitFun = ({ selFitfun, setSelFitfun, fitfuns = [] }) => {
+  // const [selfitfun, setSelFitfun] = useState()
 
   const chandleSelect = e => {
     setSelFitfun(fitfuns.find(i => i.name === e.target.value))
@@ -17,7 +17,7 @@ export const SelectFitFun = ({ fitfuns = [] }) => {
       <select
         id='selectFitFunInput'
         defaultValue={"default"}
-        value={selfitfun?.name}
+        value={selFitfun?.name}
         onChange={e => chandleSelect(e)}
       >
         <option value='default' hidden>
