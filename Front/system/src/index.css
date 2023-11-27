@@ -1,6 +1,7 @@
 :root {
 
-  --pantone: #F3E600;
+  /* --pantone: #F3E600; */
+  --pantone: #353535;
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

@@ -8,6 +8,23 @@ export const SelectAlgo = ({ algos = [] }) => {
     setSelAlgo(algos.find(i => i.name === e.target.value))
   }
 
+  const updateParam = (name, newVal) => {
+    const newParams = params.map(p => {
+      if (p.name == name) {
+        p.value = newVal
+      }
+    })
+    setParams(newParams)
+  }
+  const getParamVal = name => {
+    params.map(p => {
+      if (p.name == name) {
+        return p.value
+      }
+    })
+    return 0
+  }
+
   useEffect(() => {
     if (selAlgo) {
       setParams(
@@ -46,18 +63,15 @@ export const SelectAlgo = ({ algos = [] }) => {
           selAlgo.params.map(p => {
             // givenP = params.find(i => i.name == p.name)
             return (
-              <label title={p.desc}>
+              <label key={p.name} title={p.desc}>
                 {p.name}
                 <input
                   type='number'
                   min={p.lowerBound}
                   max={p.upperBound}
                   step={p.step}
-                  value={params.find(i => i.name == p.name).value}
-                  // onChange={setParams(...params, {
-                  //   name: params.find(i => i.name == p.name).name,
-                  //   value: params.find(i => i.name == p.name).value,
-                  // })}
+                  value={() => getParamVal(p.name)}
+                  onChange={e => updateParam(p.name, e.target.value)}
                 />
               </label>
             )

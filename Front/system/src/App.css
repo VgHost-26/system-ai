@@ -22,12 +22,12 @@ body {
   display: grid;
   height: calc(100svh - var(--gap) * 2);
   min-width: 600px;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
   grid-template-rows: 20% 20% 1fr;
   grid-template-areas:
-    'algo      fitfun'
-    'add-algo  add-fitfun'
-    'results   results';
+    'algo      fitfun       restore'
+    'add-algo  add-fitfun   run'
+    'results   results      results';
   gap: var(--gap);
 }
 
