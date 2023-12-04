@@ -7,6 +7,9 @@
   --cp-blue:#00f0ff;
   --theme-primary-color: #F3E600;
   --theme-secondary-color: #00f0ff;
+  --theme-trimary-color:#fc012a; 
+  --text-color:white;
+  --text--color-dimmed:darkgray;
 }
 
 body {
@@ -52,9 +55,10 @@ input:not([type="number"]), select{
 .sectionTitle{
   font-size: 1.5rem;
   /* color: var(--theme-primary-color); */
+  color: var(--text--color-dimmed);
 }
-.section>hr{
-  /* border-color: var(--theme-secondary-color); */
+.section hr{
+  border-color: var(--theme-primary-color);
 }
 #selectAlgorithm {
   grid-area: algo;
