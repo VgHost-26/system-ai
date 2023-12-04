@@ -105,6 +105,9 @@ input[type="file"]{
 #sectionStart{
   grid-area: run;
 }
+#sectionStart label{
+  outline: 1px solid red;
+}
 #sectionRestore{
   grid-area: restore;
 }
