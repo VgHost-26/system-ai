@@ -6,6 +6,7 @@ export const Start = () => {
   const [error, setError] = useState(null);
   const [dimension, setDimension] = useState(1);
   const [population, setPopulation] = useState(10);
+  const [iterations, setIterations] = useState(1);
 
   const simulateBackendProcess = () => {
     return new Promise((resolve, reject) => {
@@ -39,8 +40,8 @@ export const Start = () => {
         setError('Error initiating backend process');
         setLoading(false);
       });
-      /*
-      initiateBackendProcess(newSelAlgo, selFitfun, dimension, population)
+    /*
+    initiateBackendProcess(newSelAlgo, selFitfun, dimension, population)
       .then((response) => {
         console.log('Backend process initiated:', response);
         setLoading(false);
@@ -50,7 +51,7 @@ export const Start = () => {
         setError('Error initiating backend process');
         setLoading(false);
       });
-      */
+    */
   };
 
   const handleDimensionChange = (e) => {
@@ -61,6 +62,13 @@ export const Start = () => {
     const value = parseInt(e.target.value);
     if (!isNaN(value)) {
       setPopulation(value);
+    }
+  };
+
+  const handleIterationsChange = (e) => {
+    const value = parseInt(e.target.value);
+    if (!isNaN(value)) {
+      setIterations(value);
     }
   };
 
@@ -88,12 +96,23 @@ export const Start = () => {
           />
         </label>
       </div>
+      <div>
+        <label>
+          Iterations:
+          <input
+            type="number"
+            value={iterations}
+            min="1"
+            onChange={handleIterationsChange}
+          />
+        </label>
+      </div>
       {loading ? (
         <progress></progress>
       ) : (
         <div>
           {/*
-          <button onClick={() => updateSelAlgo(selAlgo)} disabled={!selAlgo || !selFitfun}>
+          <button onClick={() => startProcess} disabled={!selAlgo || !selFitfun}>
             Start Process
           </button>
           */}
@@ -106,46 +125,3 @@ export const Start = () => {
     </div>
   );
 };
-
-
-
-/*
-import React, { useState } from 'react';
-import { initiateBackendProcess } from './api'; 
-
-export const Start = ({ selAlgo, selFitfun }) => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  
-  const updateSelAlgo = (newSelAlgo) => {
-    setLoading(true);
-    setError(null);
-
-    initiateBackendProcess(newSelAlgo, selFitfun)
-      .then((response) => {
-        console.log('Backend process initiated:', response);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error initiating backend process:', err);
-        setError('Error initiating backend process');
-        setLoading(false);
-      });
-  };
-
-  return (
-    <div id="sectionStart" className="section" style={{ gridArea: 'run' }}>
-      {loading ? (
-        <progress></progress>
-      ) : (
-        <div>
-          <button onClick={() => updateSelAlgo(selAlgo)} disabled={!selAlgo || !selFitfun}>
-            Start Process
-          </button>
-        </div>
-      )}
-      {error && <p className="error">{error}</p>}
-    </div>
-  );
-};
-*/
