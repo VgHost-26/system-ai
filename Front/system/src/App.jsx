@@ -81,7 +81,31 @@ function App() {
       <Start selAlgo={selAlgo} selFitfun={selFitfun} />
       <Restore />
       <Results />
-      <HelpButton>instrukcja</HelpButton>
+
+      <HelpButton>
+        <b>Wybierz Algorytm</b> - w tym polu należy wybrać algorytm
+        optymalizacyjny. Jeśli lista algorytmów jest pusta dodaj algorytm przy
+        pomocy pola <b>Dodaj Algorytm</b>
+        Po wybraniu pojawi się lista parametrów do jego dostrojenia.
+        <br />
+        <br />
+        <b>Dodaj Algorytm</b> - wybierz plik .dll ze swoim algorytmem
+        optymalizacyjnym (jeśli chcesz zmień nazwę jego nazwę) i naciśnij
+        przycisk 'Dodaj'
+        <br />
+        <br />
+        <b>Wybierz Funkcje Celu</b> - tutaj wybierasz funkcję sprawdzającą
+        działanie wybranego algorytmu. Jeśli w liście nie ma funkcji dodaj ją
+        przy pomocy pola <b>Dodaj Algorytm</b>
+        <br />
+        <br />
+        <b>Dodaj Funkcję Celu</b> - wybierz plik .dll ze swoją funkcją celu
+        (jeśli chcesz zmień nazwę jego nazwę) i naciśnij przycisk 'Dodaj'
+        <br />
+        <br />
+        <b>Start</b> - wybierz <i>wymiar</i>, <i>populację</i> i{" "}
+        <i>ilość iteracji</i>, a anstepni naciśnij przycisk 'Start'
+      </HelpButton>
     </>
   )
 }

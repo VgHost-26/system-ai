@@ -22,14 +22,23 @@ body {
   box-sizing: border-box;
   font-size: 1em;
 }
+button{
+  color: var(--cp-blue);
+}
+dialog {
+  max-width: 50dvw;
+  border-radius: 10px;
+  padding: 50px;
+  border-color: var(--theme-primary-color);
+}
 p{
   margin: 0;
 }
 .error{
-  color: var(--cp-red);
+  color: var(--cp-red) !important;
 }
 .info{
-  color: var(--cp-blue);
+  color: var(--cp-blue) !important;
 }
 input:not([type="number"]), select{
   font-size: 1rem;
@@ -71,6 +80,7 @@ input:not([type="number"]), select{
 }
 .section hr{
   border-color: var(--theme-primary-color);
+  box-shadow: 0px 0px 5px 0px var(--theme-primary-color);
   margin-left: -30px;
   margin-right: -30px;
 }
@@ -145,7 +155,7 @@ input[type="file"]{
 }
 #sectionStart #startButton{
   background-color: var(--main-bg-color);
-  color: var(--theme-primary-color);
+  /* color: var(--theme-primary-color); */
   margin: auto;
 }
 
@@ -165,7 +175,7 @@ input[type="file"]{
 
   padding: .5em 1em;
 
-  color: var(--theme-primary-color);
+  /* color: var(--theme-primary-color); */
   background-color: var(--second-bg-color);
 
   font-weight: bold;

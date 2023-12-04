@@ -5,7 +5,11 @@ export const HelpButton = ({ children }) => {
     <>
       <dialog id='helpDialog'>
         {children}
-        <button onClick={() => helpDialog.close()}>OK</button>
+        <br />
+        <br />
+        <button className='info' onClick={() => helpDialog.close()}>
+          OK
+        </button>
       </dialog>
       <button
         id='helpButton'
