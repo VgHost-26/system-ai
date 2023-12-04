@@ -76,52 +76,54 @@ export const Start = () => {
     <div id='sectionStart' className='section' style={{ gridArea: "run" }}>
       <p className='sectionTitle'>Start </p>
       <hr />
-      <div>
-        <label>
-          Dimension:
-          <input
-            type='number'
-            value={dimension}
-            min='1'
-            onChange={handleDimensionChange}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Population:
-          <input
-            type='number'
-            value={population}
-            min='1'
-            onChange={handlePopulationChange}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Iterations:
-          <input
-            type='number'
-            value={iterations}
-            min='1'
-            onChange={handleIterationsChange}
-          />
-        </label>
-      </div>
-      {loading ? (
-        <progress></progress>
-      ) : (
+      <div className='wrapper'>
+        <div className='parameters'>
+          <label>
+            Dimension:
+            <input
+              type='number'
+              value={dimension}
+              min='1'
+              onChange={handleDimensionChange}
+            />
+          </label>
+          <label>
+            Population:
+            <input
+              type='number'
+              value={population}
+              min='1'
+              onChange={handlePopulationChange}
+            />
+          </label>
+          <label>
+            Iterations:
+            <input
+              type='number'
+              value={iterations}
+              min='1'
+              onChange={handleIterationsChange}
+            />
+          </label>
+        </div>
         <div>
-          {/*
+          {loading ? (
+            <progress></progress>
+          ) : (
+            <>
+              {/*
           <button onClick={() => startProcess} disabled={!selAlgo || !selFitfun}>
             Start Process
           </button>
           */}
-          <button onClick={startProcess}>Start Process</button>
+              <button id='startButton' onClick={startProcess}>
+                Start Process
+              </button>
+            </>
+          )}
+          {error && <p className='error'>{error}</p>}
         </div>
-      )}
-      {error && <p className='error'>{error}</p>}
+      </div>
     </div>
   )
 }

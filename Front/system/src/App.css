@@ -25,12 +25,19 @@ body {
 p{
   margin: 0;
 }
+.error{
+  color: var(--cp-red);
+}
+.info{
+  color: var(--cp-blue);
+}
 input:not([type="number"]), select{
   font-size: 1rem;
 }
 .button-circle {
   border-radius: 100%;
 }
+
 
 
 
@@ -112,9 +119,37 @@ input[type="file"]{
 #sectionStart{
   grid-area: run;
 }
-#sectionStart label{
-  outline: 1px solid red;
+#sectionStart .wrapper{
+  
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
+#sectionStart .wrapper>:nth-child(2){
+  align-self: center;
+  justify-self: center;
+  text-align: center;
+}
+#sectionStart .parameters{
+  
+}
+#sectionStart label{
+  display: block;
+  width: 180px;
+  margin: 10px 0;
+}
+#sectionStart label>input{
+  width: 4em;
+  float: right;
+
+  
+}
+#sectionStart #startButton{
+  background-color: var(--main-bg-color);
+  color: var(--theme-primary-color);
+  margin: auto;
+}
+
+
 #sectionRestore{
   grid-area: restore;
 }
