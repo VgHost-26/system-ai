@@ -1,45 +1,45 @@
-import React, { useState } from 'react';
-//import { initiateBackendProcess } from './api'; 
+import React, { useState } from "react"
+//import { initiateBackendProcess } from './api';
 
 export const Start = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [dimension, setDimension] = useState(1);
-  const [population, setPopulation] = useState(10);
-  const [iterations, setIterations] = useState(1);
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [dimension, setDimension] = useState(1)
+  const [population, setPopulation] = useState(10)
+  const [iterations, setIterations] = useState(1)
 
   const simulateBackendProcess = () => {
     return new Promise((resolve, reject) => {
       // Simulate backend process
-      setLoading(true);
+      setLoading(true)
       setTimeout(() => {
         if (Math.random() > 0.5) {
-          console.log('Simulated backend process successful');
-          setLoading(false);
-          resolve('Success');
+          console.log("Simulated backend process successful")
+          setLoading(false)
+          resolve("Success")
         } else {
-          console.error('Simulated backend process failed');
-          setLoading(false);
-          reject('Error');
+          console.error("Simulated backend process failed")
+          setLoading(false)
+          reject("Error")
         }
-      }, 2000); // Simulate a 2-second delay
-    });
-  };
+      }, 2000) // Simulate a 2-second delay
+    })
+  }
 
   const startProcess = () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
 
     simulateBackendProcess()
-      .then((response) => {
-        console.log('Backend process initiated:', response);
-        setLoading(false);
+      .then(response => {
+        console.log("Backend process initiated:", response)
+        setLoading(false)
       })
-      .catch((err) => {
-        console.error('Error initiating backend process:', err);
-        setError('Error initiating backend process');
-        setLoading(false);
-      });
+      .catch(err => {
+        console.error("Error initiating backend process:", err)
+        setError("Error initiating backend process")
+        setLoading(false)
+      })
     /*
     initiateBackendProcess(newSelAlgo, selFitfun, dimension, population)
       .then((response) => {
@@ -52,35 +52,37 @@ export const Start = () => {
         setLoading(false);
       });
     */
-  };
+  }
 
-  const handleDimensionChange = (e) => {
-    setDimension(e.target.value);
-  };
+  const handleDimensionChange = e => {
+    setDimension(e.target.value)
+  }
 
-  const handlePopulationChange = (e) => {
-    const value = parseInt(e.target.value);
+  const handlePopulationChange = e => {
+    const value = parseInt(e.target.value)
     if (!isNaN(value)) {
-      setPopulation(value);
+      setPopulation(value)
     }
-  };
+  }
 
-  const handleIterationsChange = (e) => {
-    const value = parseInt(e.target.value);
+  const handleIterationsChange = e => {
+    const value = parseInt(e.target.value)
     if (!isNaN(value)) {
-      setIterations(value);
+      setIterations(value)
     }
-  };
+  }
 
   return (
-    <div id="sectionStart" className="section" style={{ gridArea: 'run' }}>
+    <div id='sectionStart' className='section' style={{ gridArea: "run" }}>
+      <p className='sectionTitle'>Start </p>
+      <hr />
       <div>
         <label>
           Dimension:
           <input
-            type="number"
+            type='number'
             value={dimension}
-            min="1"
+            min='1'
             onChange={handleDimensionChange}
           />
         </label>
@@ -89,9 +91,9 @@ export const Start = () => {
         <label>
           Population:
           <input
-            type="number"
+            type='number'
             value={population}
-            min="1"
+            min='1'
             onChange={handlePopulationChange}
           />
         </label>
@@ -100,9 +102,9 @@ export const Start = () => {
         <label>
           Iterations:
           <input
-            type="number"
+            type='number'
             value={iterations}
-            min="1"
+            min='1'
             onChange={handleIterationsChange}
           />
         </label>
@@ -116,12 +118,10 @@ export const Start = () => {
             Start Process
           </button>
           */}
-          <button onClick={startProcess}>
-            Start Process
-          </button>
+          <button onClick={startProcess}>Start Process</button>
         </div>
       )}
-      {error && <p className="error">{error}</p>}
+      {error && <p className='error'>{error}</p>}
     </div>
-  );
-};
+  )
+}
