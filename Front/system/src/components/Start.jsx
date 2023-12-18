@@ -121,6 +121,12 @@ export const Start = ({ selAlgo, selFitfun }) => {
             </>
           )}
           {error && <p className='error'>{error}</p>}
+          <button
+            id='addQueueButton'
+            // onClick={addToQueue}
+          >
+            Dodaj do kolejki
+          </button>
         </div>
       </div>
     </div>

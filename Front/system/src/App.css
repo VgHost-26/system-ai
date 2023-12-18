@@ -18,6 +18,19 @@
   background-color: var(--main-bg-color);
 }
 
+/* @media (prefers-color-scheme: light) {
+  :root {
+    --theme-primary-color: #F3E600;
+    --theme-secondary-color: #00f0ff;
+    --theme-trimary-color:#fc012a; 
+    --text-color:black;
+    --text--color-dimmed:gray;
+
+    --main-bg-color:white;
+    --second-bg-color:#eee;
+  }
+
+} */
 body {
   margin: 10px;
   box-sizing: border-box;
@@ -101,6 +114,7 @@ input:not([type="number"]), select{
     'results   results      results';
   gap: var(--gap);
 }
+
 
 .section {
   background-color: var(--second-bg-color);
@@ -188,12 +202,12 @@ input[type="file"]{
 
   
 }
-#sectionStart #startButton{
+#sectionStart #startButton, #addQueueButton{
   background-color: var(--second-bg-color);
   border: 5px solid var(--main-bg-color);
   margin: auto;
 }
-#sectionStart #startButton:not(:disabled):hover{
+#sectionStart #startButton:not(:disabled):hover, #addQueueButton:hover{
   text-shadow: 0px 0px 5px var(--theme-secondary-color);
 }
 
