@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 //import { initiateBackendProcess } from './api';
 
-export const Start = () => {
+export const Start = ({ selAlgo, selFitfun }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [dimension, setDimension] = useState(1)
@@ -111,12 +111,11 @@ export const Start = () => {
             <progress></progress>
           ) : (
             <>
-              {/*
-          <button onClick={() => startProcess} disabled={!selAlgo || !selFitfun}>
-            Start Process
-          </button>
-          */}
-              <button id='startButton' onClick={startProcess}>
+              <button
+                disabled={!selAlgo || !selFitfun}
+                id='startButton'
+                onClick={startProcess}
+              >
                 Start Process
               </button>
             </>

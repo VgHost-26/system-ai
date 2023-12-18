@@ -85,8 +85,8 @@ export const SelectAlgo = ({
                       min={p.lowerBound}
                       max={p.upperBound}
                       step={p.step}
-                      // value={() => getParamVal(p.name)}
                       onChange={e => updateParam(p.name, e.target.value)}
+                      // value={() => getParamVal(p.name)}
                     />
                   </label>
                 )

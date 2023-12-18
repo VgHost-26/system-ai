@@ -61,6 +61,7 @@ function App() {
   const [selAlgo, setSelAlgo] = useState()
   const [params, setParams] = useState()
   const [selFitfun, setSelFitfun] = useState()
+  const [restorePoints, setRestorePoints] = useState([])
 
   return (
     <>
@@ -79,7 +80,7 @@ function App() {
       <AddAlgo handleAddAlgo={addAlgo} />
       <AddFitFun handleAddFun={addFitFun} />
       <Start selAlgo={selAlgo} selFitfun={selFitfun} />
-      <Restore />
+      <Restore restorePoints={restorePoints} />
       <Results />
 
       <HelpButton>

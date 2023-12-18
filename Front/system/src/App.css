@@ -2,9 +2,10 @@
   --b-radius-small: 5px;
   --b-radius-med: 10px;
   --b-radius-big: 20px;
-  --pantone: #F3E600;
+  --cp-yellow: #F3E600;
   --cp-red:#fc012a;
   --cp-blue:#00f0ff;
+
   --theme-primary-color: #F3E600;
   --theme-secondary-color: #00f0ff;
   --theme-trimary-color:#fc012a; 
@@ -22,9 +23,46 @@ body {
   box-sizing: border-box;
   font-size: 1em;
 }
+dialog {
+  max-width: 50dvw;
+  border-radius: 10px;
+}
+
+dialog::backdrop {
+  backdrop-filter: blur(5px);
+}
+
+button {
+  border-radius: var(--b-radius-med);
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: var(--theme-secondary-color);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
 button{
   color: var(--cp-blue);
 }
+button:disabled{
+  color: var(--text--color-dimmed);
+  cursor:not-allowed;
+}
+button:disabled:hover{
+  border-color: transparent;
+}
+
 dialog {
   max-width: 50dvw;
   border-radius: 10px;
@@ -62,7 +100,6 @@ input:not([type="number"]), select{
     'add-algo  add-fitfun   run'
     'results   results      results';
   gap: var(--gap);
-
 }
 
 .section {
@@ -139,9 +176,7 @@ input[type="file"]{
   justify-self: center;
   text-align: center;
 }
-#sectionStart .parameters{
-  
-}
+
 #sectionStart label{
   display: block;
   width: 180px;
@@ -154,11 +189,13 @@ input[type="file"]{
   
 }
 #sectionStart #startButton{
-  background-color: var(--main-bg-color);
-  /* color: var(--theme-primary-color); */
+  background-color: var(--second-bg-color);
+  border: 5px solid var(--main-bg-color);
   margin: auto;
 }
-
+#sectionStart #startButton:not(:disabled):hover{
+  text-shadow: 0px 0px 5px var(--theme-secondary-color);
+}
 
 #sectionRestore{
   grid-area: restore;
