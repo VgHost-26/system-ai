@@ -8,7 +8,7 @@ export const SelectAlgo = ({
   algos = [],
 }) => {
   // const [selAlgo, setSelAlgo] = useState()
-  // const [params, setParams] = useState()
+  // const [params, setParams] = useState(selAlgo.params)
 
   const chandleSelect = e => {
     setSelAlgo(algos.find(i => i.name === e.target.value))
@@ -22,7 +22,7 @@ export const SelectAlgo = ({
           : { name: p.name, value: p.value }
       )
     )
-    setSelAlgo({ ...selAlgo, params: params })
+    // setSelAlgo({ ...selAlgo, params: params })
   }
   const getParamVal = name => {
     params.map(p => {
@@ -80,11 +80,12 @@ export const SelectAlgo = ({
                 return (
                   <label key={p.name} title={p.desc}>
                     {p.name}
+                    {console.log(p)}
                     <input
                       type='number'
-                      min={p.lowerBound}
-                      max={p.upperBound}
-                      step={p.step}
+                      min={p.lowerBound || 0}
+                      max={p.upperBound || 10}
+                      step={p.step || 1}
                       onChange={e => updateParam(p.name, e.target.value)}
                       // value={() => getParamVal(p.name)}
                     />

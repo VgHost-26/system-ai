@@ -109,9 +109,9 @@ input:not([type="number"]), select{
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 22% 22% 1fr;
   grid-template-areas:
-    'algo      fitfun       restore'
-    'add-algo  add-fitfun   run'
-    'results   results      results';
+    'add-algo   add-fitfun   restore'
+    'algo       fitfun       run'
+    'results    results      results';
   gap: var(--gap);
 }
 
