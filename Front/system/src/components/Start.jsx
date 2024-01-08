@@ -1,7 +1,7 @@
-import React, { useState } from "react"
+import React, { useState } from 'react'
 //import { initiateBackendProcess } from './api';
 
-export const Start = ({ selAlgo, selFitfun, startAlgo }) => {
+export const Start = ({ selAlgo, selFitfuns = [], startAlgo }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [dimension, setDimension] = useState(1)
@@ -14,13 +14,13 @@ export const Start = ({ selAlgo, selFitfun, startAlgo }) => {
       setLoading(true)
       setTimeout(() => {
         if (Math.random() > 0.5) {
-          console.log("Simulated backend process successful")
+          console.log('Simulated backend process successful')
           setLoading(false)
-          resolve("Success")
+          resolve('Success')
         } else {
-          console.error("Simulated backend process failed")
+          console.error('Simulated backend process failed')
           setLoading(false)
-          reject("Error")
+          reject('Error')
         }
       }, 2000) // Simulate a 2-second delay
     })
@@ -32,12 +32,12 @@ export const Start = ({ selAlgo, selFitfun, startAlgo }) => {
 
     simulateBackendProcess()
       .then(response => {
-        console.log("Backend process initiated:", response)
+        console.log('Backend process initiated:', response)
         setLoading(false)
       })
       .catch(err => {
-        console.error("Error initiating backend process:", err)
-        setError("Error initiating backend process")
+        console.error('Error initiating backend process:', err)
+        setError('Error initiating backend process')
         setLoading(false)
       })
     /*
@@ -73,7 +73,7 @@ export const Start = ({ selAlgo, selFitfun, startAlgo }) => {
   }
 
   return (
-    <div id='sectionStart' className='section' style={{ gridArea: "run" }}>
+    <div id='sectionStart' className='section' style={{ gridArea: 'run' }}>
       <p className='sectionTitle'>Start </p>
       <hr />
       <div className='wrapper'>
@@ -112,7 +112,7 @@ export const Start = ({ selAlgo, selFitfun, startAlgo }) => {
           ) : (
             <>
               <button
-                disabled={!selAlgo || !selFitfun}
+                disabled={!(selAlgo && selFitfuns.length > 0)}
                 id='startButton'
                 onClick={startAlgo}
               >

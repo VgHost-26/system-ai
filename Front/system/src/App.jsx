@@ -1,20 +1,22 @@
-import "./App.css"
-import { AddAlgo } from "./components/AddAlgo"
-import { AddFitFun } from "./components/AddFitFun"
-import { HelpButton } from "./components/HelpButton"
-import { SelectAlgo } from "./components/SelectAlgo"
-import { SelectFitFun } from "./components/SelectFitFun"
-import { Results } from "./components/Results"
-import { useEffect, useState } from "react"
-import { Start } from "./components/Start"
-import { Restore } from "./components/Restore"
-import axios from "axios"
+import './App.css'
+import { AddAlgo } from './components/AddAlgo'
+import { AddFitFun } from './components/AddFitFun'
+import { HelpButton } from './components/HelpButton'
+import { SelectAlgo } from './components/SelectAlgo'
+import { SelectFitFun } from './components/SelectFitFun'
+import { Results } from './components/Results'
+import { useEffect, useState } from 'react'
+import { Start } from './components/Start'
+import { Restore } from './components/Restore'
+import axios from 'axios'
 
-const apiURL = "http://localhost:5076/api/Algorithms"
-const apiURLrun = "http://localhost:5076/api/Algorithms/run"
-const apiURLaddFitfun =
-  "http://localhost:5076/api/Algorithms/addFitnessFunction?name="
-const apiURLaddAlgo = "http://localhost:5076/api/Algorithms/addAlgorithm?name="
+const authors = ['a', 'b', 'c', 'd']
+authors.sort(() => Math.random() - 0.5)
+
+const apiURL = 'http://localhost:5076/api/Algorithms'
+const endpointRun = '/run'
+const andpointAddFitfun = '/addFitnessFunction?name='
+const endpointAddAlgo = '/addAlgorithm?name='
 
 axios
   .get(apiURL)
@@ -22,7 +24,7 @@ axios
     console.log(response.data)
   })
   .catch(error => {
-    console.error("Błąd:" + error)
+    console.error('Błąd:' + error)
   })
 
 function App() {
@@ -30,20 +32,20 @@ function App() {
     // wysłanie funkcji na serwer
     axios
       .post(
-        apiURLaddAlgo + name,
+        apiURL + endpointAddAlgo + name,
         { file: newAlgo },
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
         }
       )
       .then(response => {
         // informacja zwrotna
-        console.log("Response from server:", response.data)
+        console.log('Response from server:', response.data)
       })
       .catch(error => {
-        console.error("There was an error sending the POST request:", error)
+        console.error('There was an error sending the POST request:', error)
       })
   }
   function addFitFun(name, newFun) {
@@ -53,27 +55,27 @@ function App() {
 
     axios
       .post(
-        apiURLaddFitfun + name,
+        apiURL + andpointAddFitfun + name,
         { file: newFun },
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
         }
       )
       .then(response => {
         // informacja zwrotna
-        console.log("Response from server:", response.data)
+        console.log('Response from server:', response.data)
       })
       .catch(error => {
-        console.error("There was an error sending the POST request:", error)
+        console.error('There was an error sending the POST request:', error)
       })
   }
 
   function startAlgo() {
     axios
       .post(
-        apiURLrun,
+        apiURL + endpointRun,
         {
           algorithmName: selAlgo.name,
           fitnessFunctions: selFitfuns,
@@ -81,49 +83,49 @@ function App() {
         },
         {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         }
       )
       .then(response => {
         // informacja zwrotna
-        console.log("Response from server:", response.data)
+        console.log('Response from server:', response.data)
       })
       .catch(error => {
-        console.error("There was an error sending the POST request:", error)
+        console.error('There was an error sending the POST request:', error)
       })
   }
 
   const [fitfuns, setFitfuns] = useState([
-    { name: "Sphere", domain: "[[-2,-2],[2,2]]" },
-    { name: "Beale", domain: "[[-4,-4],[4,4]]" },
+    { name: 'Sphere', domain: '[[-2,-2],[2,2]]' },
+    { name: 'Beale', domain: '[[-4,-4],[4,4]]' },
   ])
   const [algos, setAlgos] = useState([
     {
-      name: "Archimedes",
+      name: 'Archimedes',
       params: [
         {
-          name: "C1",
-          desc: "po prostu stała",
+          name: 'C1',
+          desc: 'po prostu stała',
           lowerBound: 1,
           upperBound: 2,
         },
         {
-          name: "C2",
-          desc: "prosze użyć wartości parzystych",
+          name: 'C2',
+          desc: 'prosze użyć wartości parzystych',
           lowerBound: 2,
           upperBound: 6,
           step: 2,
         },
         {
-          name: "C3",
-          desc: "po prostu stała",
+          name: 'C3',
+          desc: 'po prostu stała',
           lowerBound: 1,
           upperBound: 2,
         },
         {
-          name: "C4",
-          desc: "po prostu stała",
+          name: 'C4',
+          desc: 'po prostu stała',
           lowerBound: 0.5,
           upperBound: 1,
           step: 0.5,
@@ -153,7 +155,7 @@ function App() {
       />
       <AddAlgo handleAddAlgo={addAlgo} />
       <AddFitFun handleAddFun={addFitFun} />
-      <Start selAlgo={selAlgo} selFitfun={selFitfuns} startAlgo={startAlgo} />
+      <Start selAlgo={selAlgo} selFitfuns={selFitfuns} startAlgo={startAlgo} />
       <Restore restorePoints={restorePoints} />
       <Results />
 
@@ -178,8 +180,16 @@ function App() {
         (jeśli chcesz zmień nazwę jego nazwę) i naciśnij przycisk 'Dodaj'
         <br />
         <br />
-        <b>Start</b> - wybierz <i>wymiar</i>, <i>populację</i> i{" "}
+        <b>Start</b> - wybierz <i>wymiar</i>, <i>populację</i> i
         <i>ilość iteracji</i>, a anstepni naciśnij przycisk 'Start'
+        <br />
+        <br />
+        <b>Autorzy:</b>
+        <ul>
+          {authors.map(name => {
+            return <li>{name}</li>
+          })}
+        </ul>
       </HelpButton>
     </>
   )
