@@ -73,16 +73,11 @@ function App() {
   function startAlgo() {
     axios
       .post(
-        apiURLaddFitfun + name,
+        apiURLrun,
         {
-          algorithmName: "string",
-          fitnessFunctions: [
-            {
-              name: "string",
-              domain: "string",
-            },
-          ],
-          parameters: [0],
+          algorithmName: selAlgo.name,
+          fitnessFunctions: selFitfuns,
+          parameters: [0, 0, 0, 0, 50, 50],
         },
         {
           headers: {
@@ -100,8 +95,8 @@ function App() {
   }
 
   const [fitfuns, setFitfuns] = useState([
-    { name: "Sphere", dim: 0 },
-    { name: "Beale", dim: 2 },
+    { name: "Sphere", domain: "[[-2,-2],[2,2]]" },
+    { name: "Beale", domain: "[[-4,-4],[4,4]]" },
   ])
   const [algos, setAlgos] = useState([
     {
@@ -139,7 +134,7 @@ function App() {
 
   const [selAlgo, setSelAlgo] = useState()
   const [params, setParams] = useState()
-  const [selFitfun, setSelFitfun] = useState()
+  const [selFitfuns, setSelFitfuns] = useState([])
   const [restorePoints, setRestorePoints] = useState([])
 
   return (
@@ -152,13 +147,13 @@ function App() {
         algos={algos}
       />
       <SelectFitFun
-        selFitfun={selFitfun}
-        setSelFitfun={setSelFitfun}
+        selFitfuns={selFitfuns}
+        setSelFitfuns={setSelFitfuns}
         fitfuns={fitfuns}
       />
       <AddAlgo handleAddAlgo={addAlgo} />
       <AddFitFun handleAddFun={addFitFun} />
-      <Start selAlgo={selAlgo} selFitfun={selFitfun} startAlgo={startAlgo} />
+      <Start selAlgo={selAlgo} selFitfun={selFitfuns} startAlgo={startAlgo} />
       <Restore restorePoints={restorePoints} />
       <Results />
 
