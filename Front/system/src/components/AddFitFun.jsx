@@ -5,6 +5,7 @@ export const AddFitFun = ({ handleAddFun }) => {
 
   const handleSubmit = e => {
     e.preventDefault()
+    console.log("sending...")
     if (newFitFun.files[0]) {
       // setFitfun(newFitFun.files[0])
       handleAddFun(newFitFunName.value, newFitFun.files[0])

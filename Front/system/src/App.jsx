@@ -5,19 +5,98 @@ import { HelpButton } from "./components/HelpButton"
 import { SelectAlgo } from "./components/SelectAlgo"
 import { SelectFitFun } from "./components/SelectFitFun"
 import { Results } from "./components/Results"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Start } from "./components/Start"
 import { Restore } from "./components/Restore"
+import axios from "axios"
+
+const apiURL = "http://localhost:5076/api/Algorithms"
+const apiURLrun = "http://localhost:5076/api/Algorithms/run"
+const apiURLaddFitfun =
+  "http://localhost:5076/api/Algorithms/addFitnessFunction?name="
+const apiURLaddAlgo = "http://localhost:5076/api/Algorithms/addAlgorithm?name="
+
+axios
+  .get(apiURL)
+  .then(response => {
+    console.log(response.data)
+  })
+  .catch(error => {
+    console.error("Błąd:" + error)
+  })
+
 function App() {
   function addAlgo(name, newAlgo) {
     // wysłanie funkcji na serwer
-    // informacja zwrotna
-    // dodanie funkcji do 'algos'
+    axios
+      .post(
+        apiURLaddAlgo + name,
+        { file: newAlgo },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
+      .then(response => {
+        // informacja zwrotna
+        console.log("Response from server:", response.data)
+      })
+      .catch(error => {
+        console.error("There was an error sending the POST request:", error)
+      })
   }
   function addFitFun(name, newFun) {
     // wysłanie funkcji na serwer
-    // informacja zwrotna
-    // dodanie funkcji do 'algos'
+    // console.log(newFun)
+    // console.log(apiURLaddFitfun)
+
+    axios
+      .post(
+        apiURLaddFitfun + name,
+        { file: newFun },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
+      .then(response => {
+        // informacja zwrotna
+        console.log("Response from server:", response.data)
+      })
+      .catch(error => {
+        console.error("There was an error sending the POST request:", error)
+      })
+  }
+
+  function startAlgo() {
+    axios
+      .post(
+        apiURLaddFitfun + name,
+        {
+          algorithmName: "string",
+          fitnessFunctions: [
+            {
+              name: "string",
+              domain: "string",
+            },
+          ],
+          parameters: [0],
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then(response => {
+        // informacja zwrotna
+        console.log("Response from server:", response.data)
+      })
+      .catch(error => {
+        console.error("There was an error sending the POST request:", error)
+      })
   }
 
   const [fitfuns, setFitfuns] = useState([
@@ -79,7 +158,7 @@ function App() {
       />
       <AddAlgo handleAddAlgo={addAlgo} />
       <AddFitFun handleAddFun={addFitFun} />
-      <Start selAlgo={selAlgo} selFitfun={selFitfun} />
+      <Start selAlgo={selAlgo} selFitfun={selFitfun} startAlgo={startAlgo} />
       <Restore restorePoints={restorePoints} />
       <Results />
 

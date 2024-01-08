@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 //import { initiateBackendProcess } from './api';
 
-export const Start = ({ selAlgo, selFitfun }) => {
+export const Start = ({ selAlgo, selFitfun, startAlgo }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [dimension, setDimension] = useState(1)
@@ -114,19 +114,19 @@ export const Start = ({ selAlgo, selFitfun }) => {
               <button
                 disabled={!selAlgo || !selFitfun}
                 id='startButton'
-                onClick={startProcess}
+                onClick={startAlgo}
               >
                 Start Process
               </button>
             </>
           )}
           {error && <p className='error'>{error}</p>}
-          <button
+          {/* <button
             id='addQueueButton'
             // onClick={addToQueue}
           >
             Dodaj do kolejki
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

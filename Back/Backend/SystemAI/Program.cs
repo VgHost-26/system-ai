@@ -13,7 +13,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("MyCorsPolicy", policy =>
     {
-        policy.WithOrigins("https://localhost:7117") // Dostosuj do adresu URL Twojego klienta
+        policy.WithOrigins("http://localhost:7117") // Dostosuj do adresu URL Twojego klienta
+              .AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
