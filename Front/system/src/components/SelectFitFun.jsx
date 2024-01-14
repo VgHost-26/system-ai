@@ -4,7 +4,7 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
   // const [selfitfun, setSelFitfun] = useState()
 
   const [tmpFitfun, setTmpFitfun] = useState()
-  const [tmpDim, setTmpDim] = useState('')
+  const [tmpDim, setTmpDim] = useState()
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -13,16 +13,22 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
   }
 
   function handleChooseFitfun() {
-    if (selectFitFunInput.value != 'default')
-      if (!selFitfuns.find(i => i.name === selectFitFunInput.value)) {
-        setSelFitfuns([
-          ...selFitfuns,
-          {
-            name: selectFitFunInput.value,
-            domain: '',
-          },
-        ])
-      }
+    if (selectFitFunInput.value === 'default') return
+    // if (selFitfuns.find(i => i.name === tmpFitfun)) return
+    if (
+      selFitfuns.find(i => i.name === tmpFitfun) &&
+      selFitfuns.find(i => i.domain === tmpDim)
+    )
+      return
+
+    // if (selFitfuns.find(i => i.domain === tmpDim)) return
+    setSelFitfuns([
+      ...selFitfuns,
+      {
+        name: tmpFitfun,
+        domain: tmpDim,
+      },
+    ])
   }
 
   return (
@@ -39,7 +45,7 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
               id='selectFitFunInput'
               defaultValue={'default'}
               value={tmpFitfun}
-              onChange={e => setTmpFitfun(e.value)}
+              onChange={e => setTmpFitfun(e.target.value)}
             >
               <option value='default' hidden>
                 Wybierz funkcje celu
@@ -67,6 +73,7 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
           </div>
           <input
             id='selectFitfunButton'
+            disabled={!tmpDim || !tmpFitfun}
             className=''
             type='submit'
             value='+'
@@ -76,7 +83,11 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
         <ol id='choosenFitfuns'>
           {selFitfuns != [] ? (
             selFitfuns.map(f => {
-              return <li>{f.name}</li>
+              return (
+                <li>
+                  {f.name}: {f.domain}
+                </li>
+              )
             })
           ) : (
             <></>

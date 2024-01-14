@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from 'react'
 
 export const SelectAlgo = ({
   selAlgo,
@@ -51,11 +51,11 @@ export const SelectAlgo = ({
       <div className='wrapper'>
         <div>
           <label htmlFor='selectAlgoInput' className='desc'>
-            Algorytm:{" "}
+            Algorytm:{' '}
           </label>
           <select
             id='selectAlgoInput'
-            defaultValue={"default"}
+            defaultValue={'default'}
             value={selAlgo?.name}
             onChange={e => chandleSelect(e)}
           >
@@ -80,14 +80,13 @@ export const SelectAlgo = ({
                 return (
                   <label key={p.name} title={p.desc}>
                     {p.name}
-                    {console.log(p)}
                     <input
                       type='number'
                       min={p.lowerBound || 0}
                       max={p.upperBound || 10}
                       step={p.step || 1}
                       onChange={e => updateParam(p.name, e.target.value)}
-                      // value={() => getParamVal(p.name)}
+                      //value={() => getParamVal(p.name)}
                     />
                   </label>
                 )

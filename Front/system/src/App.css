@@ -68,7 +68,8 @@ button:focus-visible {
 button{
   color: var(--cp-blue);
 }
-button:disabled{
+button:disabled,
+input:disabled{
   color: var(--text--color-dimmed);
   cursor:not-allowed;
 }
@@ -127,7 +128,6 @@ input:not([type="number"]), select{
 }
 .sectionTitle{
   font-size: 1.5rem;
-  /* color: var(--theme-primary-color); */
   color: var(--text--color-dimmed);
   background-color:var(--second-bg-color);
   box-shadow: 0 0 0 20px var(--second-bg-color);
@@ -135,6 +135,8 @@ input:not([type="number"]), select{
   position: sticky;
   top: 0;
 }
+
+
 .section hr{
   border-color: var(--theme-primary-color);
   box-shadow: 0px 0px 5px 0px var(--theme-primary-color);

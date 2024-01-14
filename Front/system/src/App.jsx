@@ -73,6 +73,7 @@ function App() {
   }
 
   function startAlgo() {
+    console.log(params)
     axios
       .post(
         apiURL + endpointRun,
@@ -135,7 +136,10 @@ function App() {
   ])
 
   const [selAlgo, setSelAlgo] = useState()
-  const [params, setParams] = useState()
+  const [params, setParams] = useState([
+    { name: 'iter', value: 1 },
+    { name: 'pop', value: 10 },
+  ])
   const [selFitfuns, setSelFitfuns] = useState([])
   const [restorePoints, setRestorePoints] = useState([])
 
@@ -155,7 +159,13 @@ function App() {
       />
       <AddAlgo handleAddAlgo={addAlgo} />
       <AddFitFun handleAddFun={addFitFun} />
-      <Start selAlgo={selAlgo} selFitfuns={selFitfuns} startAlgo={startAlgo} />
+      <Start
+        selAlgo={selAlgo}
+        selFitfuns={selFitfuns}
+        startAlgo={startAlgo}
+        params={params}
+        setParams={setParams}
+      />
       <Restore restorePoints={restorePoints} />
       <Results />
 
