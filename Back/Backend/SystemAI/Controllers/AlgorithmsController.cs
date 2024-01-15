@@ -7,11 +7,11 @@ using SystemAI.Services;
 
 namespace SystemAI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class AlgorithmsController : ControllerBase
     {
-        
+
         private readonly IAlgorithmService _algorithmService;
         private readonly IFitnessFunctionService _fitnessFunction;
 
@@ -22,7 +22,7 @@ namespace SystemAI.Controllers
         }
 
         // GET: api/algorithms
-        [HttpGet]
+        [HttpGet("Algorithms")]
         public ActionResult<IEnumerable<string>> GetAllAlgorithms()
         {
             var algorithms = _algorithmService.GetAllAlgorithmNames();
@@ -44,6 +44,21 @@ namespace SystemAI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        // POST: api/algorithms/run-multiple
+        /*[HttpPost("run-multiple")]
+        public ActionResult RunAlgorithms([FromBody] MultipleAlgorithmsRunRequest request)
+        {
+            try
+            {
+                var result = _algorithmService.RunAlgorithms(request.Algorithms, request.FitnessFunction, request.Parameters);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }*/
 
         // Nowe metody
         [HttpPost("addAlgorithm")]
@@ -100,7 +115,31 @@ namespace SystemAI.Controllers
             }
         }
 
+        [HttpGet("ParamsInfo")]
+        public IActionResult GetParamsInfo(string algorithmName)
+        {
+            try
+            {
+                _algorithmService.GetParamsInfo(algorithmName);
+                //var result = _algorithmService.GetParamsInfo(algorithmName);
+                //return Ok(result);
+                return Ok("Wykonane");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         //Fitness function
+
+        // GET: api/functions
+        [HttpGet("Functions")]
+        public ActionResult<IEnumerable<string>> GetAllFunctions()
+        {
+            var functions = _fitnessFunction.GetAllFitnessFunctionNames();
+            return Ok(functions);
+        }
 
         [HttpPost("addFitnessFunction")]
         public async Task<IActionResult> AddFitnessFunction([FromQuery] string name, IFormFile file)
@@ -142,13 +181,20 @@ namespace SystemAI.Controllers
         public List<FitnessFunctionRequest> FitnessFunctions { get; set; }
         public double[] Parameters { get; set; }
     }
-    /*public class AlgorithmRunRequest
-    {
-        //public string FitnessFunctionName { get; set; } 
-        public string[] FitnessFunctionNames { get; set; } 
-        public string DomainSerialized { get; set; } // Dane jako string JSON
-        public double[] Parameters { get; set; }
-    }*/
 
+    public class AlgorithmRequest
+    {
+        public string Name { get; set; }
+        public double[] Parameters { get; set; } //c1 c2 ...
+    }
+
+    public class MultipleAlgorithmsRunRequest
+    {
+        public List<AlgorithmRequest> Algorithms { get; set; }
+        public FitnessFunctionRequest FitnessFunction { get; set; }
+        public double Population { get; set; }
+        public double Iteration { get; set; }
+
+    }
 
 }

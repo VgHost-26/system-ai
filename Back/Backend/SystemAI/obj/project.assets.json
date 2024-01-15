@@ -513,19 +513,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\marci\\.nuget\\packages\\": {}
+    "C:\\Users\\barte\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "M:\\StudiaLocal\\POLSL\\V\\Zastosowanie AI\\Projekt2\\System\\system-ai\\Back\\Backend\\SystemAI\\SystemAI.csproj",
+      "projectUniqueName": "C:\\Users\\barte\\Desktop\\laby\\rok3semestr5\\ZastosowanieAI\\SYSTEM-AI2\\Back\\Backend\\SystemAI\\SystemAI.csproj",
       "projectName": "SystemAI",
-      "projectPath": "M:\\StudiaLocal\\POLSL\\V\\Zastosowanie AI\\Projekt2\\System\\system-ai\\Back\\Backend\\SystemAI\\SystemAI.csproj",
-      "packagesPath": "C:\\Users\\marci\\.nuget\\packages\\",
-      "outputPath": "M:\\StudiaLocal\\POLSL\\V\\Zastosowanie AI\\Projekt2\\System\\system-ai\\Back\\Backend\\SystemAI\\obj\\",
+      "projectPath": "C:\\Users\\barte\\Desktop\\laby\\rok3semestr5\\ZastosowanieAI\\SYSTEM-AI2\\Back\\Backend\\SystemAI\\SystemAI.csproj",
+      "packagesPath": "C:\\Users\\barte\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\barte\\Desktop\\laby\\rok3semestr5\\ZastosowanieAI\\SYSTEM-AI2\\Back\\Backend\\SystemAI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\marci\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\barte\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
