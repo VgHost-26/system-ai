@@ -21,14 +21,14 @@ const endpointRun = '/run'
 const andpointAddFitfun = '/addFitnessFunction?name='
 const endpointAddAlgo = '/addAlgorithm?name='
 
-// axios
-//   .get(apiURL)
-//   .then(response => {
-//     console.log(response.data)
-//   })
-//   .catch(error => {
-//     console.error('Błąd:' + error)
-//   })
+axios
+  .get(apiURL + endpointGetAlgos)
+  .then(response => {
+    console.log(response.data)
+  })
+  .catch(error => {
+    console.error('Błąd:' + error)
+  })
 
 function App() {
   const [serverResponse, setServerResponse] = useState(null)
