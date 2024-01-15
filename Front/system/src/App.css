@@ -8,9 +8,9 @@
 
   --theme-primary-color: #F3E600;
   --theme-secondary-color: #00f0ff;
-  --theme-trimary-color:#fc012a; 
+  --theme-pprimary-color:#fc012a; 
   --text-color:white;
-  --text--color-dimmed:darkgray;
+  --text-color-dimmed:darkgray;
   --shadow:rgba(10,10,10,.5);
 
   --main-bg-color:#1a1a1a;
@@ -130,7 +130,6 @@ input:not([type="number"]), select{
 #root {
   --gap: 10px;
   display: grid;
-  height: calc(100svh - var(--gap) * 2);
   min-width: 600px;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: min-content min-content 1fr;
@@ -139,6 +138,7 @@ input:not([type="number"]), select{
     'algo       fitfun       run'
     'results    results      results';
   gap: var(--gap);
+  overflow: auto;
 }
 
 
@@ -153,6 +153,7 @@ input:not([type="number"]), select{
 }
 .sectionTitle{
   font-size: 1.5rem;
+
   color: var(--text--color-dimmed);
   background-color:var(--second-bg-color);
   box-shadow: 0 0 0 20px var(--second-bg-color);

@@ -31,6 +31,9 @@ const endpointAddAlgo = '/addAlgorithm?name='
 //   })
 
 function App() {
+  const [serverResponse, setServerResponse] = useState(null)
+  const [allResponses, setAllResponses] = useState([])
+
   function addAlgo(name, newAlgo) {
     // wysłanie funkcji na serwer
     axios
@@ -51,11 +54,9 @@ function App() {
         console.error('There was an error sending the POST request:', error)
       })
   }
+
   function addFitFun(name, newFun) {
     // wysłanie funkcji na serwer
-    // console.log(newFun)
-    // console.log(apiURLaddFitfun)
-
     axios
       .post(
         apiURL + andpointAddFitfun + name,
@@ -82,8 +83,11 @@ function App() {
         apiURL + endpointRun,
         {
           algorithmName: selAlgo.name,
-          fitnessFunctions: selFitfuns,
-          parameters: [0, 0, 0, 0, 50, 50],
+          fitnessFunctions: selFitfuns.map(fun => ({
+            name: fun.name,
+            domain: fun.domain,
+          })),
+          parameters: [1, 2, 3, 4, 40, 40],
         },
         {
           headers: {
@@ -92,18 +96,50 @@ function App() {
         }
       )
       .then(response => {
-        // informacja zwrotna
+        const formattedResponses = response.data.response.map(
+          (res, index) =>
+            `Algorytm: ${selAlgo.name}, Funkcja: ${
+              selFitfuns[index].name
+            }, Wymiar: ${
+              selFitfuns[index].domain
+            } - XBest: [${res.xBestValue.join(', ')}], FBest: ${
+              res.fBestValue
+            }, Iterations: ${res.numberOfEvaluationFitnessFunctionValue}`
+        )
+
+        setAllResponses(prevResponses => [
+          ...formattedResponses,
+          ...prevResponses,
+        ])
+
+        console.log(
+          selFitfuns.map(fun => ({
+            name: fun.name,
+            domain: fun.domain,
+          }))
+        )
         console.log('Response from server:', response.data)
       })
       .catch(error => {
+        console.log(
+          selFitfuns.map(fun => ({
+            name: fun.name,
+            domain: fun.domain,
+          }))
+        )
         console.error('There was an error sending the POST request:', error)
       })
   }
 
+  const formatResponse = response => {
+    return `XBest: [${response.xBestValue}], FBest: ${response.fBestValue}, Iterations: ${response.numberOfEvaluationFitnessFunctionValue}`
+  }
+
   const [fitfuns, setFitfuns] = useState([
     { name: 'Sphere', domain: '[[-2,-2],[2,2]]' },
-    { name: 'Beale', domain: '[[-4,-4],[4,4]]' },
+    { name: 'Rastrigin', domain: '[[-4,-4],[4,4]]' },
   ])
+
   const [algos, setAlgos] = useState([
     {
       name: 'Archimedes',
@@ -173,7 +209,7 @@ function App() {
         setParams={setParams}
       />
       <Restore restorePoints={restorePoints} />
-      <Results />
+      <Results allResponses={allResponses} />
 
       <HelpButton>
         <b>Wybierz Algorytm</b> - w tym polu należy wybrać algorytm
@@ -203,7 +239,7 @@ function App() {
         <b>Autorzy:</b>
         <ul>
           {authors.map(name => {
-            return <li>{name}</li>
+            return <li key={name}>{name}</li>
           })}
         </ul>
       </HelpButton>

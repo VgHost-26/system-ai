@@ -1,11 +1,16 @@
-import React from "react"
+import React from 'react';
 
-export const Results = () => {
+export const Results = ({ allResponses }) => {
   return (
     <div id='results' className='section'>
       <p className='sectionTitle'>Wyniki</p>
       <hr />
-      {/* <progress></progress> */}
+      {allResponses.map((formattedResponse, index) => (
+        <div key={index} className='formattedResponse'>
+          <p>{formattedResponse}</p>
+          <hr />
+        </div>
+      ))}
     </div>
-  )
-}
+  );
+};

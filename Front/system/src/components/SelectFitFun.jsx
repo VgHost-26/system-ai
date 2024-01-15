@@ -1,34 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
-  // const [selfitfun, setSelFitfun] = useState()
 
   const [tmpFitfun, setTmpFitfun] = useState()
-  const [tmpDim, setTmpDim] = useState()
+  const [tmpDim, setTmpDim] = useState('')
 
   function handleSubmit(e) {
-    e.preventDefault()
-    setTmpDim('')
-    setTmpFitfun('')
+    e.preventDefault();
+    setTmpDim('');
+    setTmpFitfun('');
   }
 
   function handleChooseFitfun() {
-    if (selectFitFunInput.value === 'default') return
-    // if (selFitfuns.find(i => i.name === tmpFitfun)) return
-    if (
-      selFitfuns.find(i => i.name === tmpFitfun) &&
-      selFitfuns.find(i => i.domain === tmpDim)
-    )
-      return
-
-    // if (selFitfuns.find(i => i.domain === tmpDim)) return
-    setSelFitfuns([
-      ...selFitfuns,
-      {
-        name: tmpFitfun,
-        domain: tmpDim,
-      },
-    ])
+    if (tmpFitfun !== 'default' && !selFitfuns.find(i => i.name === tmpFitfun)) {
+      const newDomain = tmpDim;
+  
+      setSelFitfuns([
+        ...selFitfuns,
+        {
+          name: tmpFitfun,
+          domain: newDomain,
+        },
+      ]);
+    }
   }
 
   return (
@@ -50,13 +44,12 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
               <option value='default' hidden>
                 Wybierz funkcje celu
               </option>
-              {fitfuns != [] ? (
-                fitfuns.map(f => {
-                  return <option value={f.name}>{f.name}</option>
-                })
-              ) : (
-                <></>
-              )}
+              {fitfuns.length !== 0 &&
+                fitfuns.map(f => (
+                  <option key={f.name} value={f.name}>
+                    {f.name}
+                  </option>
+                ))}
             </select>
           </div>
           <div>
@@ -81,19 +74,10 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
           />
         </form>
         <ol id='choosenFitfuns'>
-          {selFitfuns != [] ? (
-            selFitfuns.map(f => {
-              return (
-                <li>
-                  {f.name}: {f.domain}
-                </li>
-              )
-            })
-          ) : (
-            <></>
-          )}
+          {selFitfuns.length !== 0 &&
+            selFitfuns.map(f => <li key={f.name}>{f.name}:{f.domain}</li>)}
         </ol>
       </div>
     </div>
-  )
-}
+  );
+};
