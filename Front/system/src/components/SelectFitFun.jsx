@@ -1,34 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
 
   const [tmpFitfun, setTmpFitfun] = useState('')
   const [tmpDim, setTmpDim] = useState('')
-  const [tmpMin, setTmpMin] = useState('')
-  const [tmpMax, setTmpMax] = useState('')
-
-  function combine(dim, min, max) {
-    let results = '[['
-    for (let i = 0; i < dim; i++) {
-      results += `${min}`
-      if (i < dim - 1) results += ','
-    }
-    results += '],['
-    for (let i = 0; i < dim; i++) {
-      results += `${max}`
-      if (i < dim - 1) results += ','
-    }
-    results += ']]'
-    return results
-  }
 
   function handleSubmit(e) {
-    e.preventDefault()
-    setTmpDim('')
-    setTmpMin('')
-    setTmpMax('')
-    setTmpFitfun('')
-    combine(tmpDim, tmpMin, tmpMax)
+    e.preventDefault();
+    setTmpDim('');
+    setTmpFitfun('');
   }
 
   function handleChooseFitfun() {
@@ -72,41 +52,23 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
               </option>
               {fitfuns.length !== 0 &&
                 fitfuns.map(f => (
-                  <option key={f} value={f}>
-                    {f}
+                  <option key={f.name} value={f.name}>
+                    {f.name}
                   </option>
                 ))}
             </select>
           </div>
-          <div id='dimensions'>
+          <div>
             <label htmlFor='chooseDomain' className=''>
               Wymiar:
-              <input
-                id='chooseDomain'
-                type='number'
-                value={tmpDim}
-                min={0}
-                onChange={e => setTmpDim(e.target.value)}
-              />
             </label>
-            <label htmlFor='chooseMin' className=''>
-              Min:
-              <input
-                id='chooseMin'
-                type='number'
-                value={tmpMin}
-                onChange={e => setTmpMin(e.target.value)}
-              />
-            </label>
-            <label htmlFor='chooseMax' className=''>
-              Max:
-              <input
-                id='chooseMax'
-                type='number'
-                value={tmpMax}
-                onChange={e => setTmpMax(e.target.value)}
-              />
-            </label>
+            <input
+              id='chooseDomain'
+              type='text'
+              placeholder='[[x1,y1, ...], [x2, y2, ...]]'
+              value={tmpDim}
+              onChange={e => setTmpDim(e.target.value)}
+            />
           </div>
           <input
             id='selectFitfunButton'
@@ -128,5 +90,5 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
         </ol>
       </div>
     </div>
-  )
-}
+  );
+};

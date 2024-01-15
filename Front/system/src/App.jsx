@@ -10,7 +10,6 @@ import { Start } from './components/Start'
 import { Restore } from './components/Restore'
 import axios from 'axios'
 import { Notify } from './components/Notify'
-import { parseParams } from './functions'
 
 const authors = ['a', 'b', 'c', 'd']
 authors.sort(() => Math.random() - 0.5)
