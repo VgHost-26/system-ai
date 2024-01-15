@@ -1,28 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
-
   const [tmpFitfun, setTmpFitfun] = useState()
   const [tmpDim, setTmpDim] = useState('')
+  const [tmpMin, setTmpMin] = useState('')
+  const [tmpMax, setTmpMax] = useState('')
+
+  function combine(dim, min, max) {
+    let results = '[['
+    for (let i = 0; i < dim; i++) {
+      results += `${min}`
+      if (i < dim - 1) results += ','
+    }
+    results += '],['
+    for (let i = 0; i < dim; i++) {
+      results += `${max}`
+      if (i < dim - 1) results += ','
+    }
+    results += ']]'
+    return results
+  }
 
   function handleSubmit(e) {
-    e.preventDefault();
-    setTmpDim('');
-    setTmpFitfun('');
+    e.preventDefault()
+    setTmpDim('')
+    setTmpMin('')
+    setTmpMax('')
+    setTmpFitfun('')
+    combine(tmpDim, tmpMin, tmpMax)
   }
 
   function handleChooseFitfun() {
-    if (tmpFitfun !== 'default' && !selFitfuns.find(i => i.name === tmpFitfun)) {
-      const newDomain = tmpDim;
-  
-      setSelFitfuns([
-        ...selFitfuns,
-        {
-          name: tmpFitfun,
-          domain: newDomain,
-        },
-      ]);
-    }
+    if (tmpFitfun === 'default') return
+
+    const newDomain = combine(tmpDim, tmpMin, tmpMax)
+
+    if (
+      selFitfuns.find(i => i.name === tmpFitfun) &&
+      selFitfuns.find(i => i.domain === newDomain)
+    )
+      return
+
+    setSelFitfuns([
+      ...selFitfuns,
+      {
+        name: tmpFitfun,
+        domain: newDomain,
+      },
+    ])
   }
 
   return (
@@ -46,23 +71,41 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
               </option>
               {fitfuns.length !== 0 &&
                 fitfuns.map(f => (
-                  <option key={f.name} value={f.name}>
-                    {f.name}
+                  <option key={f} value={f}>
+                    {f}
                   </option>
                 ))}
             </select>
           </div>
-          <div>
+          <div id='dimensions'>
             <label htmlFor='chooseDomain' className=''>
               Wymiar:
+              <input
+                id='chooseDomain'
+                type='number'
+                value={tmpDim}
+                min={0}
+                onChange={e => setTmpDim(e.target.value)}
+              />
             </label>
-            <input
-              id='chooseDomain'
-              type='text'
-              placeholder='[[x1,y1, ...], [x2, y2, ...]]'
-              value={tmpDim}
-              onChange={e => setTmpDim(e.target.value)}
-            />
+            <label htmlFor='chooseMin' className=''>
+              Min:
+              <input
+                id='chooseMin'
+                type='number'
+                value={tmpMin}
+                onChange={e => setTmpMin(e.target.value)}
+              />
+            </label>
+            <label htmlFor='chooseMax' className=''>
+              Max:
+              <input
+                id='chooseMax'
+                type='number'
+                value={tmpMax}
+                onChange={e => setTmpMax(e.target.value)}
+              />
+            </label>
           </div>
           <input
             id='selectFitfunButton'
@@ -75,9 +118,13 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
         </form>
         <ol id='choosenFitfuns'>
           {selFitfuns.length !== 0 &&
-            selFitfuns.map(f => <li key={f.name}>{f.name}:{f.domain}</li>)}
+            selFitfuns.map(f => (
+              <li key={f.name}>
+                {f.name}: {f.domain}
+              </li>
+            ))}
         </ol>
       </div>
     </div>
-  );
-};
+  )
+}

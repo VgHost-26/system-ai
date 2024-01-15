@@ -10,6 +10,7 @@ import { Start } from './components/Start'
 import { Restore } from './components/Restore'
 import axios from 'axios'
 import { Notify } from './components/Notify'
+import { parseParams } from './functions'
 
 const authors = ['a', 'b', 'c', 'd']
 authors.sort(() => Math.random() - 0.5)
@@ -20,15 +21,6 @@ const endpointGetFunctions = '/Functions'
 const endpointRun = '/run'
 const andpointAddFitfun = '/addFitnessFunction?name='
 const endpointAddAlgo = '/addAlgorithm?name='
-
-axios
-  .get(apiURL + endpointGetAlgos)
-  .then(response => {
-    console.log(response.data)
-  })
-  .catch(error => {
-    console.error('Błąd:' + error)
-  })
 
 function App() {
   const [serverResponse, setServerResponse] = useState(null)
@@ -55,6 +47,18 @@ function App() {
       })
   }
 
+  function takeFunctionsFromServer() {
+    axios
+      .get(apiURL + endpointGetFunctions)
+      .then(response => {
+        console.log(response.data)
+        setFitfuns(response.data)
+      })
+      .catch(error => {
+        console.error('Błąd:' + error)
+      })
+  }
+
   function addFitFun(name, newFun) {
     // wysłanie funkcji na serwer
     axios
@@ -70,6 +74,7 @@ function App() {
       .then(response => {
         // informacja zwrotna
         console.log('Response from server:', response.data)
+        takeFunctionsFromServer()
       })
       .catch(error => {
         console.error('There was an error sending the POST request:', error)
@@ -77,7 +82,7 @@ function App() {
   }
 
   function startAlgo() {
-    console.log(params)
+    console.log(parseParams(params).concat(ip))
     axios
       .post(
         apiURL + endpointRun,
@@ -87,7 +92,7 @@ function App() {
             name: fun.name,
             domain: fun.domain,
           })),
-          parameters: [1, 2, 3, 4, 40, 40],
+          parameters: parseParams(params).concat(ip),
         },
         {
           headers: {
@@ -135,10 +140,7 @@ function App() {
     return `XBest: [${response.xBestValue}], FBest: ${response.fBestValue}, Iterations: ${response.numberOfEvaluationFitnessFunctionValue}`
   }
 
-  const [fitfuns, setFitfuns] = useState([
-    { name: 'Sphere', domain: '[[-2,-2],[2,2]]' },
-    { name: 'Rastrigin', domain: '[[-4,-4],[4,4]]' },
-  ])
+  const [fitfuns, setFitfuns] = useState([])
 
   const [algos, setAlgos] = useState([
     {
@@ -174,11 +176,17 @@ function App() {
     },
   ])
 
+  useEffect(() => {
+    takeFunctionsFromServer()
+  }, [])
+
   const [selAlgo, setSelAlgo] = useState()
   const [params, setParams] = useState([
     { name: 'iter', value: 1 },
     { name: 'pop', value: 10 },
   ])
+  const [trigger, setTrigger] = useState(0)
+  const [ip, setIp] = useState([1, 10]) //iterations, population
   const [selFitfuns, setSelFitfuns] = useState([])
   const [restorePoints, setRestorePoints] = useState([])
 
