@@ -9,23 +9,26 @@ import { useEffect, useState } from 'react'
 import { Start } from './components/Start'
 import { Restore } from './components/Restore'
 import axios from 'axios'
+import { Notify } from './components/Notify'
 
 const authors = ['a', 'b', 'c', 'd']
 authors.sort(() => Math.random() - 0.5)
 
-const apiURL = 'http://localhost:5076/api/Algorithms'
+const apiURL = 'http://localhost:5076/api'
+const endpointGetAlgos = '/Algorithms'
+const endpointGetFunctions = '/Functions'
 const endpointRun = '/run'
 const andpointAddFitfun = '/addFitnessFunction?name='
 const endpointAddAlgo = '/addAlgorithm?name='
 
-axios
-  .get(apiURL)
-  .then(response => {
-    console.log(response.data)
-  })
-  .catch(error => {
-    console.error('Błąd:' + error)
-  })
+// axios
+//   .get(apiURL)
+//   .then(response => {
+//     console.log(response.data)
+//   })
+//   .catch(error => {
+//     console.error('Błąd:' + error)
+//   })
 
 function App() {
   function addAlgo(name, newAlgo) {
@@ -157,6 +160,9 @@ function App() {
         setSelFitfuns={setSelFitfuns}
         fitfuns={fitfuns}
       />
+      <Notify type='' anchor='addFitFun'>
+        Notification test
+      </Notify>
       <AddAlgo handleAddAlgo={addAlgo} />
       <AddFitFun handleAddFun={addFitFun} />
       <Start

@@ -11,6 +11,7 @@
   --theme-trimary-color:#fc012a; 
   --text-color:white;
   --text--color-dimmed:darkgray;
+  --shadow:rgba(10,10,10,.5);
 
   --main-bg-color:#1a1a1a;
   --second-bg-color:#222323;
@@ -99,6 +100,30 @@ input:not([type="number"]), select{
   border-radius: 100%;
 }
 
+.notification{
+  position: absolute;
+  width: fit-content;
+  border-radius: var(--b-radius-small);
+  border-bottom-left-radius: 0;
+  padding: 2px 5px;
+  
+  box-shadow: 2px 2px 3px var(--shadow);
+
+  background: var(--theme-primary-color);
+  border: 1px solid var(--main-bg-color);
+  color: var(--main-bg-color);
+  font-weight: 600;
+
+  z-index: 999;
+}
+
+.notification.good{
+  background: lime;
+}
+.notification.bad{
+  background: var(--cp-red);
+  color: white !important;
+}
 
 
 
