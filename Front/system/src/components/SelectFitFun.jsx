@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
 
-  const [tmpFitfun, setTmpFitfun] = useState()
+  const [tmpFitfun, setTmpFitfun] = useState('')
   const [tmpDim, setTmpDim] = useState('')
 
   function handleSubmit(e) {
@@ -12,7 +12,7 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
   }
 
   function handleChooseFitfun() {
-    if (tmpFitfun !== 'default' && !selFitfuns.find(i => i.name === tmpFitfun)) {
+    if (tmpFitfun !== 'default') {
       const newDomain = tmpDim;
   
       setSelFitfuns([
@@ -23,6 +23,12 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
         },
       ]);
     }
+  }
+
+  function handleDeleteFitfun(index) {
+    const updatedFitfuns = [...selFitfuns];
+    updatedFitfuns.splice(index, 1);
+    setSelFitfuns(updatedFitfuns);
   }
 
   return (
@@ -75,7 +81,12 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
         </form>
         <ol id='choosenFitfuns'>
           {selFitfuns.length !== 0 &&
-            selFitfuns.map(f => <li key={f.name}>{f.name}:{f.domain}</li>)}
+            selFitfuns.map((f, index) => (
+              <li key={`${f.name}-${index}`}>
+                {f.name}:{f.domain}
+                <button onClick={() => handleDeleteFitfun(index)}>Delete</button>
+              </li>
+            ))}
         </ol>
       </div>
     </div>

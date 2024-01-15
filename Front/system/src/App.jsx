@@ -33,6 +33,41 @@ const endpointAddAlgo = '/addAlgorithm?name='
 function App() {
   const [serverResponse, setServerResponse] = useState(null)
   const [allResponses, setAllResponses] = useState([])
+  const [iterations, setIterations] = useState(1);
+  const [population, setPopulation] = useState(10);
+
+  const fetchFitFunctions = () => {
+    axios
+      .get(apiURL + endpointGetFunctions)
+      .then(response => {
+        let fetchedFitFunNames;
+
+        // Check if the response is a string and parse it
+        if (typeof response.data === 'string') {
+          fetchedFitFunNames = response.data.split(',');
+        } else if (Array.isArray(response.data)) {
+          // If it's already an array, use it directly
+          fetchedFitFunNames = response.data;
+        } else {
+          console.error('Unexpected response format for fit functions:', response);
+          return;
+        }
+
+        // Create fit function objects from the names
+        const fetchedFitFuns = fetchedFitFunNames.map(name => ({
+          name,
+          // You can set a default domain or fetch it from another API endpoint if needed
+          domain: '[[-1,-1],[1,1]]',
+        }));
+
+        // Setting the fit functions
+        console.log(fetchedFitFuns);
+        setFitfuns(fetchedFitFuns);
+      })
+      .catch(error => {
+        console.error('Error fetching fit functions:', error);
+      });
+  };
 
   function addAlgo(name, newAlgo) {
     // wysłanie funkcji na serwer
@@ -70,6 +105,7 @@ function App() {
       .then(response => {
         // informacja zwrotna
         console.log('Response from server:', response.data)
+        fetchFitFunctions();
       })
       .catch(error => {
         console.error('There was an error sending the POST request:', error)
@@ -77,7 +113,8 @@ function App() {
   }
 
   function startAlgo() {
-    console.log(params)
+    const algoParams = [...params.map(param => param.value), iterations, population];
+    console.log(algoParams)
     axios
       .post(
         apiURL + endpointRun,
@@ -87,7 +124,7 @@ function App() {
             name: fun.name,
             domain: fun.domain,
           })),
-          parameters: [1, 2, 3, 4, 40, 40],
+          parameters: algoParams,
         },
         {
           headers: {
@@ -136,8 +173,6 @@ function App() {
   }
 
   const [fitfuns, setFitfuns] = useState([
-    { name: 'Sphere', domain: '[[-2,-2],[2,2]]' },
-    { name: 'Rastrigin', domain: '[[-4,-4],[4,4]]' },
   ])
 
   const [algos, setAlgos] = useState([
@@ -174,6 +209,10 @@ function App() {
     },
   ])
 
+  useEffect(() => {
+    fetchFitFunctions();
+  }, []);
+
   const [selAlgo, setSelAlgo] = useState()
   const [params, setParams] = useState([
     { name: 'iter', value: 1 },
@@ -207,6 +246,10 @@ function App() {
         startAlgo={startAlgo}
         params={params}
         setParams={setParams}
+        iterations={iterations}
+        population={population}
+        setPopulation={setPopulation}
+        setIterations={setIterations}
       />
       <Restore restorePoints={restorePoints} />
       <Results allResponses={allResponses} />
