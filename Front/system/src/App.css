@@ -221,7 +221,7 @@ input[type="file"]{
   align-self: flex-end;
 }
 
-#parameters{
+#parameters, #dimensions{
   display: flex;
   justify-content: space-around;
 }
@@ -229,13 +229,15 @@ input[type="file"]{
   display: block;
   margin-bottom: 5px;
 }
-#parameters>label{
+#parameters>label,
+#dimensions>label{
   display: block;
   text-align:center;
   font-style: italic;
   font-size: .8rem;
 }
-#parameters>label>input {
+#parameters>label>input,
+#dimensions>label>input{
   width: 3em;
   margin: 0 5px;
 }

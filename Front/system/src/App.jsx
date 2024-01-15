@@ -10,6 +10,7 @@ import { Start } from './components/Start'
 import { Restore } from './components/Restore'
 import axios from 'axios'
 import { Notify } from './components/Notify'
+import { parseParams } from './functions'
 
 const authors = ['a', 'b', 'c', 'd']
 authors.sort(() => Math.random() - 0.5)
@@ -20,15 +21,6 @@ const endpointGetFunctions = '/Functions'
 const endpointRun = '/run'
 const andpointAddFitfun = '/addFitnessFunction?name='
 const endpointAddAlgo = '/addAlgorithm?name='
-
-// axios
-//   .get(apiURL)
-//   .then(response => {
-//     console.log(response.data)
-//   })
-//   .catch(error => {
-//     console.error('Błąd:' + error)
-//   })
 
 function App() {
   const [serverResponse, setServerResponse] = useState(null)
@@ -87,6 +79,18 @@ function App() {
       })
       .catch(error => {
         console.error('There was an error sending the POST request:', error)
+      })
+  }
+
+  function takeFunctionsFromServer() {
+    axios
+      .get(apiURL + endpointGetFunctions)
+      .then(response => {
+        console.log(response.data)
+        setFitfuns(response.data)
+      })
+      .catch(error => {
+        console.error('Błąd:' + error)
       })
   }
 
@@ -218,6 +222,8 @@ function App() {
     { name: 'iter', value: 1 },
     { name: 'pop', value: 10 },
   ])
+  const [trigger, setTrigger] = useState(0)
+  const [ip, setIp] = useState([1, 10]) //iterations, population
   const [selFitfuns, setSelFitfuns] = useState([])
   const [restorePoints, setRestorePoints] = useState([])
 
