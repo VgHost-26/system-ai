@@ -3,7 +3,7 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
-Back\Backend\SystemAI\Data
+Back/Backend/SystemAI/Data/*
 
 # User-specific files
 *.rsuser
@@ -477,3 +477,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+Back/Backend/SystemAI/Data/ArchimedesOptymalizationAlgortyhm5.json
