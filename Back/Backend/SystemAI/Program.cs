@@ -23,10 +23,11 @@ builder.Services.AddCors(options =>
 
 
 var algorithmsPath = Path.Combine(Directory.GetCurrentDirectory(), "Algorithms");
-builder.Services.AddSingleton<IAlgorithmService, AlgorithmService>(sp =>
-    new AlgorithmService(algorithmsPath, new AlgorithmLoader(), new FitnesFunctionLoader()));
+var fitnessFunctionPath = Path.Combine(Directory.GetCurrentDirectory(), "Functions");
 
-var fitnessFunctionPath = Path.Combine(Directory.GetCurrentDirectory(), "Algorithms");
+builder.Services.AddSingleton<IAlgorithmService, AlgorithmService>(sp =>
+    new AlgorithmService(algorithmsPath, new AlgorithmLoader(), fitnessFunctionPath, new FitnesFunctionLoader()));
+
 builder.Services.AddSingleton<IFitnessFunctionService, FitnessFunctionService>(sp =>
     new FitnessFunctionService(fitnessFunctionPath));
 

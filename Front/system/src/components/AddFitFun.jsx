@@ -1,22 +1,22 @@
-import React, { useState } from "react"
+import React, { useState } from 'react'
 export const AddFitFun = ({ handleAddFun }) => {
-  const [fitfun, setFitfun] = useState({ name: "" })
-  const [fitfunName, setFitfunName] = useState("")
+  const [fitfun, setFitfun] = useState({ name: '' })
+  const [fitfunName, setFitfunName] = useState('')
 
   const handleSubmit = e => {
     e.preventDefault()
-    console.log("sending...")
+    console.log('sending...')
     if (newFitFun.files[0]) {
       // setFitfun(newFitFun.files[0])
       handleAddFun(newFitFunName.value, newFitFun.files[0])
       // clear inputs
       newFitFun.value = null
-      setFitfunName("")
+      setFitfunName('')
     }
   }
 
   const handleFileChange = () => {
-    if (newFitFunName.value == "") {
+    if (newFitFunName.value == '') {
       setFitfunName(newFitFun.files[0].name.slice(0, -4))
     }
   }
@@ -42,7 +42,7 @@ export const AddFitFun = ({ handleAddFun }) => {
           />
         </label>
 
-        <input type='submit' value={"Dodaj"} />
+        <input type='submit' value={'Dodaj'} />
       </form>
     </div>
   )

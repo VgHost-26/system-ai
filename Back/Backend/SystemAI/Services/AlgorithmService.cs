@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Reflection;
+using System.Xml.Linq;
 using SystemAI.Controllers;
 using SystemAI.Interfaces;
 
@@ -10,19 +11,21 @@ namespace SystemAI.Services
 
         private readonly string _algorithmsFolderPath;
         private readonly AlgorithmLoader _algorithmLoader;
+        private readonly string _fitnessFunctionPath;
         private readonly FitnesFunctionLoader _fitnesFunctionLoader;
 
-        public AlgorithmService(string algorithmsFolderPath, AlgorithmLoader algorithmLoader, FitnesFunctionLoader fitnesFunctionLoader)
+        public AlgorithmService(string algorithmsFolderPath, AlgorithmLoader algorithmLoader, string fitnessFunctionPath, FitnesFunctionLoader fitnesFunctionLoader)
         {
             _algorithmsFolderPath = algorithmsFolderPath;
             _algorithmLoader = algorithmLoader;
+            _fitnessFunctionPath = fitnessFunctionPath;
             _fitnesFunctionLoader = fitnesFunctionLoader;
         }
 
         public IEnumerable<string> GetAllAlgorithmNames()
         {
             return Directory.GetFiles(_algorithmsFolderPath, "*.dll").Select(Path.GetFileNameWithoutExtension);
-        }       
+        }
 
         public (object, Type) LoadAlgorithm(string algorithmName)
         {
@@ -30,16 +33,15 @@ namespace SystemAI.Services
             return _algorithmLoader.LoadAlgorithm(dllPath);
         }
 
-        //nowe
         public List<object> LoadFitnessFunctions(string[] functionNames)
         {
             string[] dllPaths = new string[functionNames.Length];
-            for(int i=0; i < functionNames.Length; i++)
+            for (int i = 0; i < functionNames.Length; i++)
             {
-                string dllPath = Path.Combine(_algorithmsFolderPath, functionNames[i] + ".dll");
+                string dllPath = Path.Combine(_fitnessFunctionPath, functionNames[i] + ".dll");
                 dllPaths[i] = dllPath;
             }
-           
+
             return _fitnesFunctionLoader.LoadFitnesFunctions(dllPaths);
         }
 
@@ -50,7 +52,7 @@ namespace SystemAI.Services
             {
                 throw new InvalidOperationException("Algorithm could not be loaded.");
             }
-            else if(delegateFunction == null)
+            else if (delegateFunction == null)
             {
                 throw new InvalidOperationException("Delegate Function could not be loaded.");
             }
@@ -70,7 +72,7 @@ namespace SystemAI.Services
                 var deserializedDomain = DeserializeDomain(request.Domain);
                 domains.Add(deserializedDomain);
             }
-           // double[,] domain = DeserializeDomain(DomainSerialized);
+            // double[,] domain = DeserializeDomain(DomainSerialized);
 
 
             // Wypisywanie wartości domain
@@ -123,23 +125,37 @@ namespace SystemAI.Services
 
                 response.Add(algorithmResult);
 
-               /* 
-                string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Data");
+                //Generowanie pdfa
+                /*var pdfReportGenerator = optimizationAlgorithm.GetType().GetProperty("pdfReportGenerator");
+                var GenerateReport = pdfReportGenerator.GetType().GetMethod("GenerateReport");
 
-                // Pobiera wszystkie pliki .json w folderze
-                string[] jsonFiles = Directory.GetFiles(folderPath, "*.json");
+                var ParamsInfo = optimizationAlgorithm.GetType().GetProperty("ParamsInfo");
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
+                GenerateReport.Invoke(pdfReportGenerator, new object[] { path, XBest, FBest, NumberOfEvaluationFitnessFunction, ParamsInfo });*/
 
-                // Iteruje przez wszystkie znalezione pliki i je usuwa
-                foreach (string file in jsonFiles)
-                {
-                    File.Delete(file);
-                }*/
+                //usuwanie json
+                /* 
+                 string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Data");
+
+                 // Pobiera wszystkie pliki .json w folderze
+                 string[] jsonFiles = Directory.GetFiles(folderPath, "*.json");
+
+                 // Iteruje przez wszystkie znalezione pliki i je usuwa
+                 foreach (string file in jsonFiles)
+                 {
+                     File.Delete(file);
+                 }*/
 
             }
 
             object resposneObject = new { response };
 
             return resposneObject;
+        }
+
+        public object RunAlgorithms(string[] algorithmsNames, FitnessFunctionRequest fitnessFunctionName)
+        {
+            throw new NotImplementedException();
         }
 
         // Nowe metody
@@ -175,6 +191,24 @@ namespace SystemAI.Services
             }
         }
 
+        public void GetParamsInfo(string algorithmName)
+        {
+            (var optimizationAlgorithm, var delegateFunction) = LoadAlgorithm(algorithmName);
+            if (optimizationAlgorithm == null)
+            {
+                throw new InvalidOperationException("Algorithm could not be loaded.");
+            }
+            else if (delegateFunction == null)
+            {
+                throw new InvalidOperationException("Delegate Function could not be loaded.");
+            }
+
+            var ParamsInfo = optimizationAlgorithm.GetType().GetProperty("ParamsInfo");
+            var _paramsInfo = ParamsInfo.GetValue(optimizationAlgorithm);
+            Console.WriteLine(_paramsInfo);
+
+        }
+
         private double[,] DeserializeDomain(string serializedDomain)
         {
             // Deserializacja do listy list lub innego odpowiedniego formatu
@@ -196,7 +230,7 @@ namespace SystemAI.Services
             return domainArray;
         }
 
-
+        
     }
 
     public class AlgorithmLoader
@@ -222,7 +256,7 @@ namespace SystemAI.Services
             delegateFunction = assembly.GetType("Archimedes.fitnessFunction");
 
             return (instance, delegateFunction);
-           //throw new InvalidOperationException("No valid algorithm found in DLL.");
+            //throw new InvalidOperationException("No valid algorithm found in DLL.");
         }
     }
 
@@ -249,7 +283,7 @@ namespace SystemAI.Services
         {
             List<object> fitnessFunctions = new List<object>();
 
-            foreach(var fitnessFunction in fitnessFunctionsNames)
+            foreach (var fitnessFunction in fitnessFunctionsNames)
             {
                 Assembly assembly = Assembly.LoadFrom(fitnessFunction);
 
@@ -265,7 +299,7 @@ namespace SystemAI.Services
                     }
                 }
             }
-            
+
             return fitnessFunctions;
         }
     }

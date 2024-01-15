@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
 export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [] }) => {
-  const [tmpFitfun, setTmpFitfun] = useState('');
-  const [tmpDim, setTmpDim] = useState('');
+
+  const [tmpFitfun, setTmpFitfun] = useState()
+  const [tmpDim, setTmpDim] = useState('')
 
   function handleSubmit(e) {
     e.preventDefault();

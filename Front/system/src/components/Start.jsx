@@ -1,7 +1,13 @@
 import React, { useState } from 'react'
 //import { initiateBackendProcess } from './api';
 
-export const Start = ({ selAlgo, selFitfuns = [], startAlgo }) => {
+export const Start = ({
+  selAlgo,
+  selFitfuns = [],
+  startAlgo,
+  params,
+  setParams,
+}) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [dimension, setDimension] = useState(1)
@@ -24,6 +30,16 @@ export const Start = ({ selAlgo, selFitfuns = [], startAlgo }) => {
         }
       }, 2000) // Simulate a 2-second delay
     })
+  }
+  const updateParam = (name, newVal) => {
+    setParams(
+      params.map(p =>
+        p.name === name
+          ? { name: name, value: newVal }
+          : { name: p.name, value: p.value }
+      )
+    )
+    // setSelAlgo({ ...selAlgo, params: params })
   }
 
   const startProcess = () => {
@@ -57,12 +73,16 @@ export const Start = ({ selAlgo, selFitfuns = [], startAlgo }) => {
   const handleDimensionChange = e => {
     setDimension(e.target.value)
   }
+  const handleStart = () => {
+    startAlgo()
+  }
 
   const handlePopulationChange = e => {
     const value = parseInt(e.target.value)
     if (!isNaN(value)) {
       setPopulation(value)
     }
+    updateParam('pop', value)
   }
 
   const handleIterationsChange = e => {
@@ -70,6 +90,7 @@ export const Start = ({ selAlgo, selFitfuns = [], startAlgo }) => {
     if (!isNaN(value)) {
       setIterations(value)
     }
+    updateParam('iter', value)
   }
 
   return (
@@ -78,15 +99,6 @@ export const Start = ({ selAlgo, selFitfuns = [], startAlgo }) => {
       <hr />
       <div className='wrapper'>
         <div className='parameters'>
-          <label>
-            Dimension:
-            <input
-              type='number'
-              value={dimension}
-              min='1'
-              onChange={handleDimensionChange}
-            />
-          </label>
           <label>
             Population:
             <input
@@ -114,7 +126,7 @@ export const Start = ({ selAlgo, selFitfuns = [], startAlgo }) => {
               <button
                 disabled={!(selAlgo && selFitfuns.length > 0)}
                 id='startButton'
-                onClick={startAlgo}
+                onClick={handleStart}
               >
                 Start Process
               </button>
