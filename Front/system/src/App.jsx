@@ -9,25 +9,57 @@ import { useEffect, useState } from 'react'
 import { Start } from './components/Start'
 import { Restore } from './components/Restore'
 import axios from 'axios'
+import { Notify } from './components/Notify'
 
 const authors = ['a', 'b', 'c', 'd']
 authors.sort(() => Math.random() - 0.5)
 
-const apiURL = 'http://localhost:5076/api/Algorithms'
+const apiURL = 'http://localhost:5076/api'
+const endpointGetAlgos = '/Algorithms'
+const endpointGetFunctions = '/Functions'
 const endpointRun = '/run'
 const andpointAddFitfun = '/addFitnessFunction?name='
 const endpointAddAlgo = '/addAlgorithm?name='
 
-axios
-  .get(apiURL)
-  .then(response => {
-    console.log(response.data)
-  })
-  .catch(error => {
-    console.error('Błąd:' + error)
-  })
-
 function App() {
+  const [serverResponse, setServerResponse] = useState(null)
+  const [allResponses, setAllResponses] = useState([])
+  const [iterations, setIterations] = useState(1);
+  const [population, setPopulation] = useState(10);
+
+  const fetchFitFunctions = () => {
+    axios
+      .get(apiURL + endpointGetFunctions)
+      .then(response => {
+        let fetchedFitFunNames;
+
+        // Check if the response is a string and parse it
+        if (typeof response.data === 'string') {
+          fetchedFitFunNames = response.data.split(',');
+        } else if (Array.isArray(response.data)) {
+          // If it's already an array, use it directly
+          fetchedFitFunNames = response.data;
+        } else {
+          console.error('Unexpected response format for fit functions:', response);
+          return;
+        }
+
+        // Create fit function objects from the names
+        const fetchedFitFuns = fetchedFitFunNames.map(name => ({
+          name,
+          // You can set a default domain or fetch it from another API endpoint if needed
+          domain: '[[-1,-1],[1,1]]',
+        }));
+
+        // Setting the fit functions
+        console.log(fetchedFitFuns);
+        setFitfuns(fetchedFitFuns);
+      })
+      .catch(error => {
+        console.error('Error fetching fit functions:', error);
+      });
+  };
+
   function addAlgo(name, newAlgo) {
     // wysłanie funkcji na serwer
     axios
@@ -48,11 +80,21 @@ function App() {
         console.error('There was an error sending the POST request:', error)
       })
   }
+
+  function takeFunctionsFromServer() {
+    axios
+      .get(apiURL + endpointGetFunctions)
+      .then(response => {
+        console.log(response.data)
+        setFitfuns(response.data)
+      })
+      .catch(error => {
+        console.error('Błąd:' + error)
+      })
+  }
+
   function addFitFun(name, newFun) {
     // wysłanie funkcji na serwer
-    // console.log(newFun)
-    // console.log(apiURLaddFitfun)
-
     axios
       .post(
         apiURL + andpointAddFitfun + name,
@@ -66,6 +108,7 @@ function App() {
       .then(response => {
         // informacja zwrotna
         console.log('Response from server:', response.data)
+        fetchFitFunctions();
       })
       .catch(error => {
         console.error('There was an error sending the POST request:', error)
@@ -73,14 +116,18 @@ function App() {
   }
 
   function startAlgo() {
-    console.log(params)
+    const algoParams = [...params.map(param => param.value), iterations, population];
+    console.log(algoParams)
     axios
       .post(
         apiURL + endpointRun,
         {
           algorithmName: selAlgo.name,
-          fitnessFunctions: selFitfuns,
-          parameters: [0, 0, 0, 0, 50, 50],
+          fitnessFunctions: selFitfuns.map(fun => ({
+            name: fun.name,
+            domain: fun.domain,
+          })),
+          parameters: algoParams,
         },
         {
           headers: {
@@ -89,18 +136,48 @@ function App() {
         }
       )
       .then(response => {
-        // informacja zwrotna
+        const formattedResponses = response.data.response.map(
+          (res, index) =>
+            `Algorytm: ${selAlgo.name}, Funkcja: ${
+              selFitfuns[index].name
+            }, Wymiar: ${
+              selFitfuns[index].domain
+            } - XBest: [${res.xBestValue.join(', ')}], FBest: ${
+              res.fBestValue
+            }, Iterations: ${res.numberOfEvaluationFitnessFunctionValue}`
+        )
+
+        setAllResponses(prevResponses => [
+          ...formattedResponses,
+          ...prevResponses,
+        ])
+
+        console.log(
+          selFitfuns.map(fun => ({
+            name: fun.name,
+            domain: fun.domain,
+          }))
+        )
         console.log('Response from server:', response.data)
       })
       .catch(error => {
+        console.log(
+          selFitfuns.map(fun => ({
+            name: fun.name,
+            domain: fun.domain,
+          }))
+        )
         console.error('There was an error sending the POST request:', error)
       })
   }
 
+  const formatResponse = response => {
+    return `XBest: [${response.xBestValue}], FBest: ${response.fBestValue}, Iterations: ${response.numberOfEvaluationFitnessFunctionValue}`
+  }
+
   const [fitfuns, setFitfuns] = useState([
-    { name: 'Sphere', domain: '[[-2,-2],[2,2]]' },
-    { name: 'Beale', domain: '[[-4,-4],[4,4]]' },
   ])
+
   const [algos, setAlgos] = useState([
     {
       name: 'Archimedes',
@@ -135,11 +212,17 @@ function App() {
     },
   ])
 
+  useEffect(() => {
+    fetchFitFunctions();
+  }, []);
+
   const [selAlgo, setSelAlgo] = useState()
   const [params, setParams] = useState([
     { name: 'iter', value: 1 },
     { name: 'pop', value: 10 },
   ])
+  const [trigger, setTrigger] = useState(0)
+  const [ip, setIp] = useState([1, 10]) //iterations, population
   const [selFitfuns, setSelFitfuns] = useState([])
   const [restorePoints, setRestorePoints] = useState([])
 
@@ -157,6 +240,9 @@ function App() {
         setSelFitfuns={setSelFitfuns}
         fitfuns={fitfuns}
       />
+      <Notify type='' anchor='addFitFun'>
+        Notification test
+      </Notify>
       <AddAlgo handleAddAlgo={addAlgo} />
       <AddFitFun handleAddFun={addFitFun} />
       <Start
@@ -165,9 +251,13 @@ function App() {
         startAlgo={startAlgo}
         params={params}
         setParams={setParams}
+        iterations={iterations}
+        population={population}
+        setPopulation={setPopulation}
+        setIterations={setIterations}
       />
       <Restore restorePoints={restorePoints} />
-      <Results />
+      <Results allResponses={allResponses} />
 
       <HelpButton>
         <b>Wybierz Algorytm</b> - w tym polu należy wybrać algorytm
@@ -197,7 +287,7 @@ function App() {
         <b>Autorzy:</b>
         <ul>
           {authors.map(name => {
-            return <li>{name}</li>
+            return <li key={name}>{name}</li>
           })}
         </ul>
       </HelpButton>
