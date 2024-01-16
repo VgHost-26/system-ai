@@ -126,7 +126,7 @@ namespace SystemAI.Services
                 response.Add(algorithmResult);
 
                 //Generowanie pdfa
-                /*var pdfReportGenerator = optimizationAlgorithm.GetType().GetProperty("pdfReportGenerator");
+               /* var pdfReportGenerator = optimizationAlgorithm.GetType().GetProperty("pdfReportGenerator");
                 var GenerateReport = pdfReportGenerator.GetType().GetMethod("GenerateReport");
 
                 var ParamsInfo = optimizationAlgorithm.GetType().GetProperty("ParamsInfo");
@@ -153,7 +153,7 @@ namespace SystemAI.Services
             return resposneObject;
         }
 
-        public object RunAlgorithms(string[] algorithmsNames, FitnessFunctionRequest fitnessFunctionName)
+        public object RunAlgorithms(List<AlgorithmRequest> algorithms, FitnessFunctionRequest fitnessFunctionName, double population, double iteration)
         {
             throw new NotImplementedException();
         }
@@ -191,7 +191,7 @@ namespace SystemAI.Services
             }
         }
 
-        public void GetParamsInfo(string algorithmName)
+        public List<ParamInfoResponse> GetParamsInfo(string algorithmName)
         {
             (var optimizationAlgorithm, var delegateFunction) = LoadAlgorithm(algorithmName);
             if (optimizationAlgorithm == null)
@@ -203,9 +203,26 @@ namespace SystemAI.Services
                 throw new InvalidOperationException("Delegate Function could not be loaded.");
             }
 
-            var ParamsInfo = optimizationAlgorithm.GetType().GetProperty("ParamsInfo");
-            var _paramsInfo = ParamsInfo.GetValue(optimizationAlgorithm);
-            Console.WriteLine(_paramsInfo);
+            // Pobieranie właściwości ParamsInfo          
+
+            var paramsInfoArray = (Array)optimizationAlgorithm.GetType().GetProperty("ParamsInfo").GetValue(optimizationAlgorithm);
+
+            List<ParamInfoResponse> paramInfoRequests = new List<ParamInfoResponse>();
+
+            foreach (var paramInfo in paramsInfoArray)
+            {
+                string _name = (string)paramInfo.GetType().GetProperty("Name").GetValue(paramInfo);
+                string _description = (string)paramInfo.GetType().GetProperty("Description").GetValue(paramInfo);
+                double _upperBoundary = (double)paramInfo.GetType().GetProperty("UpperBoundary").GetValue(paramInfo);
+                double _lowerBoundary = (double)paramInfo.GetType().GetProperty("LowerBoundary").GetValue(paramInfo);
+                //double _step = (double)paramInfo.GetType().GetProperty("Step").GetValue(paramInfo);
+
+
+                paramInfoRequests.Add(new ParamInfoResponse(_name, _description, _upperBoundary, _lowerBoundary));               
+            }
+
+            Console.WriteLine(paramInfoRequests);
+            return paramInfoRequests;
 
         }
 
@@ -242,6 +259,7 @@ namespace SystemAI.Services
             Assembly assembly = Assembly.LoadFrom(dllPath);
             foreach (Type t in assembly.GetTypes())
             {
+                //Console.WriteLine(t.FullName);
                 // Szukanie klas ktore implementuja IOptimizationAlgorithm
                 if (t.GetInterface("IOptimizationAlgorithm", true) != null)
                 {
@@ -302,6 +320,24 @@ namespace SystemAI.Services
 
             return fitnessFunctions;
         }
+    }
+
+    public class ParamInfoResponse
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public double UpperBoundary { get; set; }
+        public double LowerBoundary { get; set; }
+        
+
+        public ParamInfoResponse(string _name, string _description, double _uppderBoundary, double _lowerBoundary)
+        {
+            Name = _name;
+            Description = _description;
+            UpperBoundary = _uppderBoundary;
+            LowerBoundary = _lowerBoundary;
+        }
+
     }
 }
 

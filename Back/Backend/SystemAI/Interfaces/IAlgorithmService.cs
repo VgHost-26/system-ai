@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using SystemAI.Controllers;
+using SystemAI.Services;
 
 namespace SystemAI.Interfaces
 {
@@ -10,13 +11,13 @@ namespace SystemAI.Interfaces
         public List<object> LoadFitnessFunctions(string[] functionNames);
         object RunAlgorithm(string algorithmName, List<FitnessFunctionRequest> fitnessFunctionNames, params double[] parameters); // Uruchamia algorytm
 
-        object RunAlgorithms(string[] algorithmsNames, FitnessFunctionRequest fitnessFunctionName);
+        object RunAlgorithms(List<AlgorithmRequest> algorithms, FitnessFunctionRequest fitnessFunctionName, double population, double iteration);
 
         // Nowe metody
         void AddAlgorithm(string algorithmName, byte[] algorithmData);
         void UpdateAlgorithm(string algorithmName, byte[] algorithmData);
         void DeleteAlgorithm(string algorithmName);
-        void GetParamsInfo(string algorithmName);
+        List<ParamInfoResponse> GetParamsInfo(string algorithmName);
 
     }
 

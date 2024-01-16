@@ -36,11 +36,11 @@ namespace SystemAI.Interfaces
 
     public class ParamInfo
     {
-        string? Name { get; set; }
-        string? Description { get; set; }
-        double? UpperBoundary { get; set; }
-        double? LowerBoundary { get; set; }
-        double? step { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public double UpperBoundary { get; set; }
+        public double LowerBoundary { get; set; }
+        public double Step { get; set; }
     }
     // na poziomie namespace
     public delegate double fitnessFunction(params double[] arg);

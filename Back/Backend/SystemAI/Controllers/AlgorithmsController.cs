@@ -46,19 +46,19 @@ namespace SystemAI.Controllers
         }
 
         // POST: api/algorithms/run-multiple
-        /*[HttpPost("run-multiple")]
+        [HttpPost("run-multiple")]
         public ActionResult RunAlgorithms([FromBody] MultipleAlgorithmsRunRequest request)
         {
             try
             {
-                var result = _algorithmService.RunAlgorithms(request.Algorithms, request.FitnessFunction, request.Parameters);
+                var result = _algorithmService.RunAlgorithms(request.Algorithms, request.FitnessFunction, request.Population, request.Iteration);
                 return Ok(result);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-        }*/
+        }
 
         // Nowe metody
         [HttpPost("addAlgorithm")]
@@ -120,10 +120,10 @@ namespace SystemAI.Controllers
         {
             try
             {
-                _algorithmService.GetParamsInfo(algorithmName);
+                var response = _algorithmService.GetParamsInfo(algorithmName);
                 //var result = _algorithmService.GetParamsInfo(algorithmName);
                 //return Ok(result);
-                return Ok("Wykonane");
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -133,7 +133,7 @@ namespace SystemAI.Controllers
 
         //Fitness function
 
-        // GET: api/functions
+        // GET: api/Functions
         [HttpGet("Functions")]
         public ActionResult<IEnumerable<string>> GetAllFunctions()
         {
