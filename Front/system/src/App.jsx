@@ -27,6 +27,11 @@ function App() {
   const [allResponses, setAllResponses] = useState([])
   const [iterations, setIterations] = useState(1)
   const [population, setPopulation] = useState(10)
+  const [notification, setNotification] = useState({ type: '', message: '' });
+
+  const showNotification = (message, type) => {
+    setNotification({ message, type });
+  };
 
   const fetchFitFunctions = () => {
     axios
@@ -304,6 +309,13 @@ function App() {
       ) : (
         <></>
       )}
+      <Notify
+  type={notification.type}
+  anchor='selectFitFun'
+  clearUseState={setNotification}
+>
+  {notification.message}
+</Notify>
       <SelectAlgo
         selAlgo={selAlgo}
         setSelAlgo={setSelAlgo}
@@ -315,8 +327,9 @@ function App() {
         selFitfuns={selFitfuns}
         setSelFitfuns={setSelFitfuns}
         fitfuns={fitfuns}
+        showNotification={showNotification}
       />
-
+      
       <AddAlgo handleAddAlgo={addAlgo} />
       <AddFitFun handleAddFun={addFitFun} />
       <Start
