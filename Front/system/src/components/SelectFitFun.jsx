@@ -56,7 +56,6 @@ export const SelectFitFun = ({ selFitfuns, setSelFitfuns, fitfuns = [], showNoti
     // Check if dimension is a valid number, and lengths of minValues and maxValues match
     if (!isNaN(dimension) && minValues.length === dimension && maxValues.length === dimension) {
         const domain = '['+'[' + minValues + ']' + ',' + '[' + maxValues + ']'+ ']';
-      console.log(domain)
       return domain;
   } else {
       return null;

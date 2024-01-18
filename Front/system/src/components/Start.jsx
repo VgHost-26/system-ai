@@ -7,12 +7,14 @@ export const Start = ({
   startAlgo,
   params,
   setParams,
+  iterations,
+  setIterations,
+  population,
+  setPopulation,
 }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [dimension, setDimension] = useState(1)
-  const [population, setPopulation] = useState(10)
-  const [iterations, setIterations] = useState(1)
 
   const simulateBackendProcess = () => {
     return new Promise((resolve, reject) => {
@@ -78,20 +80,20 @@ export const Start = ({
   }
 
   const handlePopulationChange = e => {
-    const value = parseInt(e.target.value)
+    const value = parseInt(e.target.value);
     if (!isNaN(value)) {
-      setPopulation(value)
+      setPopulation(value);
     }
-    updateParam('pop', value)
-  }
+    updateParam('pop', value);
+  };
 
   const handleIterationsChange = e => {
-    const value = parseInt(e.target.value)
+    const value = parseInt(e.target.value);
     if (!isNaN(value)) {
-      setIterations(value)
+      setIterations(value);
     }
-    updateParam('iter', value)
-  }
+    updateParam('iter', value);
+  };
 
   return (
     <div id='sectionStart' className='section' style={{ gridArea: 'run' }}>

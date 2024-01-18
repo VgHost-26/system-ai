@@ -56,7 +56,6 @@ function App() {
         // Create fit function objects from the names
         const fetchedFitFuns = fetchedFitFunNames.map(name => ({
           name,
-          // You can set a default domain or fetch it from another API endpoint if needed
           domain: '[[-1,-1],[1,1]]',
         }))
 
@@ -339,9 +338,9 @@ function App() {
         params={params}
         setParams={setParams}
         iterations={iterations}
+        setIterations={setIterations}
         population={population}
         setPopulation={setPopulation}
-        setIterations={setIterations}
       />
       <Restore restorePoints={restorePoints} />
       <Results allResponses={allResponses} />
