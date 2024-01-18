@@ -1,8 +1,8 @@
-import React, { useState } from "react"
+import React, { useState } from 'react'
 
 export const AddAlgo = ({ handleAddAlgo }) => {
-  const [algo, setAlgo] = useState({ name: "" })
-  const [algoName, setAlgoName] = useState("")
+  const [algo, setAlgo] = useState({ name: '' })
+  const [algoName, setAlgoName] = useState('')
 
   const handleSubmit = e => {
     e.preventDefault()
@@ -10,13 +10,13 @@ export const AddAlgo = ({ handleAddAlgo }) => {
       // setAlgo(newAlgo.files[0])
       handleAddAlgo(newAlgoName.value, newAlgo.files[0])
       // clear inputs
-      setAlgoName("")
+      setAlgoName('')
       newAlgo.value = null
     }
   }
 
   const handleFileChange = () => {
-    if (newAlgoName.value == "") {
+    if (newAlgoName.value == '') {
       setAlgoName(newAlgo.files[0].name.slice(0, -4))
     }
   }
@@ -42,7 +42,7 @@ export const AddAlgo = ({ handleAddAlgo }) => {
           />
         </label>
 
-        <input type='submit' value={"Dodaj"} />
+        <input id='addAlgoSubmit' type='submit' value={'Dodaj'} />
       </form>
     </div>
   )

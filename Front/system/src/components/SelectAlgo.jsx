@@ -78,12 +78,12 @@ export const SelectAlgo = ({
               selAlgo.params.map(p => {
                 // givenP = params.find(i => i.name == p.name)
                 return (
-                  <label key={p.name} title={p.desc}>
+                  <label key={p.name} title={p.description}>
                     {p.name}
                     <input
                       type='number'
-                      min={p.lowerBound || 0}
-                      max={p.upperBound || 10}
+                      min={p.lowerBoundary || 0}
+                      max={p.upperBoundary || 10}
                       step={p.step || 1}
                       onChange={e => updateParam(p.name, e.target.value)}
                       //value={() => getParamVal(p.name)}
