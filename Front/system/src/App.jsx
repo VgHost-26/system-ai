@@ -11,7 +11,7 @@ import { Restore } from './components/Restore'
 import axios from 'axios'
 import { Notify } from './components/Notify'
 
-const authors = ['a', 'b', 'c', 'd']
+const authors = ['Marcin Widuch', 'Bartek', 'Arseni', 'Paweł Cyrkowski']
 authors.sort(() => Math.random() - 0.5)
 
 const apiURL = 'http://localhost:5076/api'
@@ -27,11 +27,11 @@ function App() {
   const [allResponses, setAllResponses] = useState([])
   const [iterations, setIterations] = useState(1)
   const [population, setPopulation] = useState(10)
-  const [notification, setNotification] = useState({ type: '', message: '' });
+  const [notification, setNotification] = useState({ type: '', message: '' })
 
   const showNotification = (message, type) => {
-    setNotification({ message, type });
-  };
+    setNotification({ message, type })
+  }
 
   const fetchFitFunctions = () => {
     axios
@@ -166,6 +166,7 @@ function App() {
   }
 
   function startAlgo() {
+    setIsInProgress(true)
     const algoParams = [
       ...params.map(param => param.value),
       iterations,
@@ -190,6 +191,7 @@ function App() {
         }
       )
       .then(response => {
+        setIsInProgress(false)
         const formattedResponses = response.data.response.map(
           (res, index) =>
             `Algorytm: ${selAlgo.name}, Funkcja: ${
@@ -279,13 +281,15 @@ function App() {
   const [selFitfuns, setSelFitfuns] = useState([])
   const [restorePoints, setRestorePoints] = useState([])
   const [successConfirm, setSuccessConfirm] = useState('')
+  const [serverConnectionState, setServerConnectionState] = useState('loading')
+  const [isInProgress, setIsInProgress] = useState(false)
 
   return (
     <>
       {successConfirm.module === 'algo' ? (
         <Notify
           type={successConfirm.type}
-          anchor='addAlgoSubmit'
+          anchor='addAlgorithm'
           clearUseState={setSuccessConfirm}
         >
           {successConfirm.type !== 'bad'
@@ -298,7 +302,7 @@ function App() {
       {successConfirm.module === 'fitFun' ? (
         <Notify
           type={successConfirm.type}
-          anchor='addFitFunSubmit'
+          anchor='addFitFun'
           clearUseState={setSuccessConfirm}
         >
           {successConfirm.type !== 'bad'
@@ -309,12 +313,12 @@ function App() {
         <></>
       )}
       <Notify
-  type={notification.type}
-  anchor='selectFitFun'
-  clearUseState={setNotification}
->
-  {notification.message}
-</Notify>
+        type={notification.type}
+        anchor='selectFitFun'
+        clearUseState={setNotification}
+      >
+        {notification.message}
+      </Notify>
       <SelectAlgo
         selAlgo={selAlgo}
         setSelAlgo={setSelAlgo}
@@ -328,7 +332,7 @@ function App() {
         fitfuns={fitfuns}
         showNotification={showNotification}
       />
-      
+
       <AddAlgo handleAddAlgo={addAlgo} />
       <AddFitFun handleAddFun={addFitFun} />
       <Start
@@ -341,14 +345,24 @@ function App() {
         setIterations={setIterations}
         population={population}
         setPopulation={setPopulation}
+        loading={isInProgress}
       />
       <Restore restorePoints={restorePoints} />
       <Results allResponses={allResponses} />
 
       <HelpButton>
+        Dla najlepszych doświadczeń zalecamy używać strony na pełnym ekranie
+        <br />
+        <h6>
+          <i>
+            wcale to nie jest tak że nam się nie chciało zrobić responsywnej
+            strony :P
+          </i>
+        </h6>
         <b>Wybierz Algorytm</b> - w tym polu należy wybrać algorytm
         optymalizacyjny. Jeśli lista algorytmów jest pusta dodaj algorytm przy
         pomocy pola <b>Dodaj Algorytm</b>
+        <br />
         Po wybraniu pojawi się lista parametrów do jego dostrojenia.
         <br />
         <br />
@@ -358,16 +372,20 @@ function App() {
         <br />
         <br />
         <b>Wybierz Funkcje Celu</b> - tutaj wybierasz funkcję sprawdzającą
-        działanie wybranego algorytmu. Jeśli w liście nie ma funkcji dodaj ją
-        przy pomocy pola <b>Dodaj Algorytm</b>
+        działanie wybranego algorytmu, oraz wymiar (<i>dimension</i>).
+        <br /> Jeśli na liście nie ma funkcji dodaj ją przy pomocy pola{' '}
+        <b>Dodaj Algorytm</b>
         <br />
         <br />
         <b>Dodaj Funkcję Celu</b> - wybierz plik .dll ze swoją funkcją celu
-        (jeśli chcesz zmień nazwę jego nazwę) i naciśnij przycisk 'Dodaj'
+        (jeśli chcesz zmień nazwę jej nazwę) i naciśnij przycisk 'Dodaj'
         <br />
         <br />
-        <b>Start</b> - wybierz <i>wymiar</i>, <i>populację</i> i
-        <i>ilość iteracji</i>, a anstepni naciśnij przycisk 'Start'
+        <b>Start</b> - wybierz <i>populację</i> i <i>ilość iteracji</i> a
+        anstepni naciśnij przycisk 'Start'.
+        <br />
+        Po ukończeniu sprawdzania algorytmu w sekcji <b>Wyniki</b> pojawi sie
+        szybki podgląd wyników oraz link do szczegółowego PDFu
         <br />
         <br />
         <b>Autorzy:</b>

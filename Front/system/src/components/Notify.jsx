@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 
 export const Notify = ({
   children,
@@ -6,33 +6,33 @@ export const Notify = ({
   anchor = 'root',
   clearUseState,
 }) => {
-  const [x, setX] = useState(0);
-  const [y, setY] = useState(0);
+  const [x, setX] = useState(0)
+  const [y, setY] = useState(0)
 
   // On componentDidMount set the timer
   useEffect(() => {
     if (children) {
       const timeId = setTimeout(() => {
         // After 6 seconds set the show value to false
-        clearUseState('');
-      }, 4000);
+        clearUseState('')
+      }, 4000)
 
       return () => {
-        clearTimeout(timeId);
-      };
+        clearTimeout(timeId)
+      }
     }
-  }, [children, clearUseState]);
+  }, [children, clearUseState])
 
   useEffect(() => {
-    const anch = document.getElementById(anchor);
-    setX(anch.offsetLeft);
+    const anch = document.getElementById(anchor)
+    setX(anch.offsetLeft)
     // Tymczasowo wyłączone, ponieważ powiadomienia nie były wyświetlane.
     // setY(anch.offsetTop - anch.clientHeight * 1.5)
-    setY(anch.offsetTop);
-  }, [anchor]);
+    setY(anch.offsetTop)
+  }, [anchor])
 
   if (!children) {
-    return null; // Render nothing if children are empty
+    return null // Render nothing if children are empty
   }
 
   return (
@@ -42,5 +42,5 @@ export const Notify = ({
     >
       {children}
     </div>
-  );
-};
+  )
+}

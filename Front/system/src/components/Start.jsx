@@ -11,8 +11,8 @@ export const Start = ({
   setIterations,
   population,
   setPopulation,
+  loading,
 }) => {
-  const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [dimension, setDimension] = useState(1)
 
@@ -44,21 +44,21 @@ export const Start = ({
     // setSelAlgo({ ...selAlgo, params: params })
   }
 
-  const startProcess = () => {
-    setLoading(true)
-    setError(null)
+  // const startProcess = () => {
+  //   setLoading(true)
+  //   setError(null)
 
-    simulateBackendProcess()
-      .then(response => {
-        console.log('Backend process initiated:', response)
-        setLoading(false)
-      })
-      .catch(err => {
-        console.error('Error initiating backend process:', err)
-        setError('Error initiating backend process')
-        setLoading(false)
-      })
-    /*
+  //   simulateBackendProcess()
+  //     .then(response => {
+  //       console.log('Backend process initiated:', response)
+  //       setLoading(false)
+  //     })
+  //     .catch(err => {
+  //       console.error('Error initiating backend process:', err)
+  //       setError('Error initiating backend process')
+  //       setLoading(false)
+  //     })
+  /*
     initiateBackendProcess(newSelAlgo, selFitfun, dimension, population)
       .then((response) => {
         console.log('Backend process initiated:', response);
@@ -69,8 +69,8 @@ export const Start = ({
         setError('Error initiating backend process');
         setLoading(false);
       });
+    }
     */
-  }
 
   const handleDimensionChange = e => {
     setDimension(e.target.value)
@@ -80,20 +80,20 @@ export const Start = ({
   }
 
   const handlePopulationChange = e => {
-    const value = parseInt(e.target.value);
+    const value = parseInt(e.target.value)
     if (!isNaN(value)) {
-      setPopulation(value);
+      setPopulation(value)
     }
-    updateParam('pop', value);
-  };
+    updateParam('pop', value)
+  }
 
   const handleIterationsChange = e => {
-    const value = parseInt(e.target.value);
+    const value = parseInt(e.target.value)
     if (!isNaN(value)) {
-      setIterations(value);
+      setIterations(value)
     }
-    updateParam('iter', value);
-  };
+    updateParam('iter', value)
+  }
 
   return (
     <div id='sectionStart' className='section' style={{ gridArea: 'run' }}>
@@ -121,27 +121,29 @@ export const Start = ({
           </label>
         </div>
         <div>
-          {loading ? (
-            <progress></progress>
-          ) : (
-            <>
-              <button
-                disabled={!(selAlgo && selFitfuns.length > 0)}
-                id='startButton'
-                onClick={handleStart}
-              >
-                Start Process
-              </button>
-            </>
-          )}
+          <button
+            disabled={!(selAlgo && selFitfuns.length > 0) || loading}
+            id='startButton'
+            onClick={handleStart}
+          >
+            Start Process
+          </button>
+
           {error && <p className='error'>{error}</p>}
           {/* <button
             id='addQueueButton'
             // onClick={addToQueue}
-          >
+            >
             Dodaj do kolejki
           </button> */}
         </div>
+        {loading ? (
+          <span class='material-symbols-outlined loading-circle'>
+            progress_activity
+          </span>
+        ) : (
+          <> </>
+        )}
       </div>
     </div>
   )
