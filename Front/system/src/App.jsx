@@ -13,6 +13,10 @@ import { Notify } from './components/Notify'
 
 const authors = ['Marcin Widuch', 'Bartek', 'Arseni', 'Paweł Cyrkowski']
 authors.sort(() => Math.random() - 0.5)
+const testModeEnum = {
+  SINGLE_ALGORITHM: 'Pojedynczy algorytm',
+  MULTIPLE_ALGORITHMS: 'Wiele algorytmów',
+};
 
 const apiURL = 'http://localhost:5076/api'
 const endpointGetAlgos = '/Algorithms'
@@ -27,10 +31,17 @@ function App() {
   const [allResponses, setAllResponses] = useState([])
   const [iterations, setIterations] = useState(1)
   const [population, setPopulation] = useState(10)
-  const [notification, setNotification] = useState({ type: '', message: '' })
+  const [notificationFuns, setNotificationFuns] = useState({ type: '', message: '' })
+  const [notificationAlgos, setNotificationAlgos] = useState({ type: '', message: '' })
+  const [testMode, setTestMode] = useState(testModeEnum.SINGLE_ALGORITHM);
+  const [selAlgoList, setSelAlgoList] = useState([]);
 
-  const showNotification = (message, type) => {
-    setNotification({ message, type })
+  const showNotificationFuns = (message, type) => {
+    setNotificationFuns({ message, type })
+  }
+
+  const showNotificationAlgos = (message, type) => {
+    setNotificationAlgos({ message, type })
   }
 
   const fetchFitFunctions = () => {
@@ -166,65 +177,139 @@ function App() {
   }
 
   function startAlgo() {
-    setIsInProgress(true)
-    const algoParams = [
-      ...params.map(param => param.value),
-      iterations,
-      population,
-    ]
-    console.log(algoParams)
-    axios
-      .post(
-        apiURL + endpointRun,
-        {
-          algorithmName: selAlgo.name,
-          fitnessFunctions: selFitfuns.map(fun => ({
-            name: fun.name,
-            domain: fun.domain,
-          })),
-          parameters: algoParams,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
+    if (testMode === testModeEnum.SINGLE_ALGORITHM){
+      setIsInProgress(true)
+      const algoParams = [
+        ...params.map(param => param.value),
+        iterations,
+        population,
+      ]
+      console.log(algoParams)
+      axios
+        .post(
+          apiURL + endpointRun,
+          {
+            algorithmName: selAlgo.name,
+            fitnessFunctions: selFitfuns.map(fun => ({
+              name: fun.name,
+              domain: fun.domain,
+            })),
+            parameters: algoParams,
           },
-        }
-      )
-      .then(response => {
-        setIsInProgress(false)
-        const formattedResponses = response.data.response.map(
-          (res, index) =>
-            `Algorytm: ${selAlgo.name}, Funkcja: ${
-              selFitfuns[index].name
-            }, Wymiar: ${
-              selFitfuns[index].domain
-            } - XBest: [${res.xBestValue.join(', ')}], FBest: ${
-              res.fBestValue
-            }, Iterations: ${res.numberOfEvaluationFitnessFunctionValue}`
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
         )
-
-        setAllResponses(prevResponses => [
-          ...formattedResponses,
-          ...prevResponses,
-        ])
-
-        console.log(
-          selFitfuns.map(fun => ({
-            name: fun.name,
-            domain: fun.domain,
-          }))
-        )
-        console.log('Response from server:', response.data)
+        .then(response => {
+          setIsInProgress(false)
+          const formattedResponses = response.data.response.map(
+            (res, index) =>
+              `Algorytm: ${selAlgo.name}, Funkcja: ${
+                selFitfuns[index].name
+              }, Wymiar: ${
+                selFitfuns[index].domain
+              } - XBest: [${res.xBestValue.join(', ')}], FBest: ${
+                res.fBestValue
+              }, Iterations: ${res.numberOfEvaluationFitnessFunctionValue}`
+          )
+  
+          setAllResponses(prevResponses => [
+            ...formattedResponses,
+            ...prevResponses,
+          ])
+  
+          console.log(
+            selFitfuns.map(fun => ({
+              name: fun.name,
+              domain: fun.domain,
+            }))
+          )
+          console.log('Response from server:', response.data)
+        })
+        .catch(error => {
+          console.log(
+            selFitfuns.map(fun => ({
+              name: fun.name,
+              domain: fun.domain,
+            }))
+          )
+          console.error('There was an error sending the POST request:', error)
+        })
+    }
+    else if (testMode === testModeEnum.MULTIPLE_ALGORITHMS){
+      console.log({
+        algorithms: selAlgoList.map(alg => ({
+          name: alg.name,
+          steps: alg.steps,
+        })),
+        fitnessFunction: {
+          name: selFitfuns[0].name,
+          domain: selFitfuns[0].domain
+        },
+        population: population,
+        iteration: iterations
       })
-      .catch(error => {
-        console.log(
-          selFitfuns.map(fun => ({
-            name: fun.name,
-            domain: fun.domain,
-          }))
+      // Multiple algorithms
+      setIsInProgress(true)
+      axios
+        .post(
+          apiURL + endpointRun,
+          {
+            algorithms: selAlgoList.map(alg => ({
+              name: alg.name,
+              steps: alg.steps,
+            })),
+            fitnessFunction: {
+              name: selFitfuns[0].name,
+              domain: selFitfuns[0].domain
+            },
+            population: population,
+            iteration: iterations
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
         )
-        console.error('There was an error sending the POST request:', error)
-      })
+        .then(response => {
+          setIsInProgress(false)
+          const formattedResponses = response.data.response.map(
+            (res, index) =>
+              `Algorytm: ${selAlgo.name}, Funkcja: ${
+                selFitfuns[index].name
+              }, Wymiar: ${
+                selFitfuns[index].domain
+              } - XBest: [${res.xBestValue.join(', ')}], FBest: ${
+                res.fBestValue
+              }, Iterations: ${res.numberOfEvaluationFitnessFunctionValue}`
+          )
+  
+          setAllResponses(prevResponses => [
+            ...formattedResponses,
+            ...prevResponses,
+          ])
+  
+          console.log(
+            selFitfuns.map(fun => ({
+              name: fun.name,
+              domain: fun.domain,
+            }))
+          )
+          console.log('Response from server:', response.data)
+        })
+        .catch(error => {
+          console.log(
+            selFitfuns.map(fun => ({
+              name: fun.name,
+              domain: fun.domain,
+            }))
+          )
+          console.error('There was an error sending the POST request:', error)
+        })
+    }
   }
 
   const formatResponse = response => {
@@ -313,11 +398,18 @@ function App() {
         <></>
       )}
       <Notify
-        type={notification.type}
+        type={notificationFuns.type}
         anchor='selectFitFun'
-        clearUseState={setNotification}
+        clearUseState={setNotificationFuns}
       >
-        {notification.message}
+        {notificationFuns.message}
+      </Notify>
+      <Notify
+        type={notificationAlgos.type}
+        anchor='selectAlgorithm'
+        clearUseState={setNotificationAlgos}
+      >
+        {notificationAlgos.message}
       </Notify>
       <SelectAlgo
         selAlgo={selAlgo}
@@ -325,12 +417,20 @@ function App() {
         params={params}
         setParams={setParams}
         algos={algos}
+        showNotification={showNotificationAlgos}
+        testModeEnum={testModeEnum}
+        testMode={testMode}
+        setTestMode={setTestMode}
+        selAlgoList={selAlgoList}
+        setSelAlgoList={setSelAlgoList}
       />
       <SelectFitFun
         selFitfuns={selFitfuns}
         setSelFitfuns={setSelFitfuns}
         fitfuns={fitfuns}
-        showNotification={showNotification}
+        showNotification={showNotificationFuns}
+        testMode={testMode}
+        testModeEnum={testModeEnum}
       />
 
       <AddAlgo handleAddAlgo={addAlgo} />
