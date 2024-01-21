@@ -49,8 +49,24 @@ export const SelectAlgo = ({
   }
 
   const handleSelect = (e) => {
-    setSelAlgo(algos.find((i) => i.name === e.target.value));
-  }
+    const selectedAlgorithm = algos.find((i) => i.name === e.target.value);
+    setSelAlgo(selectedAlgorithm);
+  
+    // Clear temporary steps and reset parameters
+    setTmpSteps('');
+    setParams(
+      selectedAlgorithm.params.map((p) => ({
+        name: p.name,
+        value: p.lowerBound,
+      }))
+    );
+  
+    // Clear text inputs for parameters
+    const paramInputs = document.querySelectorAll('#parameters input');
+    paramInputs.forEach((input) => {
+      input.value = ''; // Resetting the input value
+    });
+  };
 
   const updateParam = (name, newVal) => {
     setParams(
@@ -64,17 +80,19 @@ export const SelectAlgo = ({
 
   const handleAddToAlgoList = () => {
     const newSteps = generateSteps();
-    if (newSteps != null) {
-      setSelAlgoList([...selAlgoList, {
-        name: selAlgo.name,
-        steps: newSteps,
-      },
-      ]);
+  
+    // Check if the algorithm with the same name is already in the list
+    const isDuplicate = selAlgoList.some((algo) => algo.name === selAlgo.name);
+  
+    if (!isDuplicate && newSteps != null) {
+      setSelAlgoList([...selAlgoList, { name: selAlgo.name, steps: newSteps }]);
       showNotification('');
+    } else if (isDuplicate) {
+      showNotification('Algorithm with the same name is already in the list', 'error');
     } else {
       showNotification('Invalid input for steps', 'error');
     }
-  }
+  };
 
   
   const handleRemoveFromAlgoList = (index) => {
@@ -90,9 +108,10 @@ export const SelectAlgo = ({
 
   function generateSteps() {
     const tSteps = parseValues(tmpSteps);
-    if (tSteps.length === selAlgo.params.length ) {
-      const steps = '[' + tSteps + ']';
-      return steps;
+  
+    // Check if the number of steps matches the number of parameters
+    if (tSteps.length === selAlgo.params.length && tSteps.every(step => step === tSteps[0])) {
+      return tSteps;
     } else {
       return null;
     }
@@ -137,12 +156,14 @@ export const SelectAlgo = ({
                   Wybierz algorytm
                   </option>
                   {algos != [] ? (
-                    algos.map(a => {
-                      return <option value={a.name}>{a.name}</option>
-                    })
-                  ) : (
-                  <option disabled>Najpierw dodaj algorytm</option>
-                )}
+                    algos.map((a, index) => (
+                      <option key={index} value={a.name}>
+                      {a.name}
+                      </option>
+                      ))
+                      ) : (
+                        <option disabled>Najpierw dodaj algorytm</option>
+                        )}
               </select>
             </div>
             <div>
@@ -186,12 +207,14 @@ export const SelectAlgo = ({
                   Wybierz algorytm
                   </option>
                   {algos != [] ? (
-                    algos.map(a => {
-                      return <option value={a.name}>{a.name}</option>
-                    })
-                    ) : (
-                  <option disabled>Najpierw dodaj algorytm</option>
-                )}
+                    algos.map((a, index) => (
+                      <option key={index} value={a.name}>
+                      {a.name}
+                      </option>
+                      ))
+                      ) : (
+                        <option disabled>Najpierw dodaj algorytm</option>
+                        )}
               </select>
             </div>
             <label htmlFor='chooseMin' className=''>
@@ -216,22 +239,22 @@ export const SelectAlgo = ({
         
         {/* Display selected algorithms with remove button */}
         <div>
-          <p className='desc'>Wybrane algorytmy:</p>
-          <ul>
-            {selAlgoList.length !== 0 &&
-              selAlgoList.map((algo, index) => (
-                <li key={`${algo.name}-${index}`}>
-                  <button
-                  className='delete-button'
-                  onClick={() => handleRemoveFromAlgoList(index)}
-                >
-                  X
-                </button>
-                {algo.name}: {algo.steps}
-                </li>
-              ))}
-          </ul>
-        </div>
+  <p className='desc'>Wybrane algorytmy:</p>
+  <ul>
+    {selAlgoList.length !== 0 &&
+      selAlgoList.map((algo, index) => (
+        <li key={`${algo.name}-${index}`}>
+          <button
+            className='delete-button'
+            onClick={() => handleRemoveFromAlgoList(index)}
+          >
+            X
+          </button>
+          {algo.name}: [{algo.steps.join(', ')}]
+        </li>
+      ))}
+  </ul>
+</div>
         </>
         )}
       </div>
