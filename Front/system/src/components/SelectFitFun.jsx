@@ -82,8 +82,8 @@ export const SelectFitFun = ({
 
     if (
       !isNaN(dimension) &&
-      minValues.length === dimension &&
-      maxValues.length === dimension
+      minValues.length === dimension && minValues.every(value => !isNaN(value))&&
+      maxValues.length === dimension && maxValues.every(value => !isNaN(value))
     ) {
       const domain = '[' + '[' + minValues + ']' + ',' + '[' + maxValues + ']' + ']';
       return domain;

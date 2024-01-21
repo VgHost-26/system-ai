@@ -110,7 +110,7 @@ export const SelectAlgo = ({
     const tSteps = parseValues(tmpSteps);
   
     // Check if the number of steps matches the number of parameters
-    if (tSteps.length === selAlgo.params.length && tSteps.every(step => step === tSteps[0])) {
+    if (tSteps.length === selAlgo.params.length && tSteps.every(step => !isNaN(step))) {
       return tSteps;
     } else {
       return null;
