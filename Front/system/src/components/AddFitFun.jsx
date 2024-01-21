@@ -42,7 +42,7 @@ export const AddFitFun = ({ handleAddFun }) => {
           />
         </label>
 
-        <input type='submit' value={'Dodaj'} />
+        <input id='addFitFunSubmit' type='submit' value={'Dodaj'} />
       </form>
     </div>
   )

@@ -1,6 +1,6 @@
 :root {
   --b-radius-small: 5px;
-  --b-radius-med: 10px;
+  --b-radius-med: 7px;
   --b-radius-big: 20px;
   --cp-yellow: #F3E600;
   --cp-red:#fc012a;
@@ -19,6 +19,31 @@
   background-color: var(--main-bg-color);
 }
 
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 300,
+  'GRAD' 0,
+  'opsz' 50;
+  color: var(--theme-primary-color);
+  font-size: 3rem;
+  rotate: 0deg;
+  animation: rotation-animation 2s linear infinite;
+  user-select: none;
+}
+.loading-circle{
+  
+  grid-column: 2;
+  grid-row: 2;
+  text-align: center;
+}
+.button-and-loading{
+}
+
+@keyframes rotation-animation {
+  from{rotate: 0deg;}
+  to{rotate: 360deg;}
+}
 /* @media (prefers-color-scheme: light) {
   :root {
     --theme-primary-color: #F3E600;
@@ -55,6 +80,18 @@ button {
   font-family: inherit;
   cursor: pointer;
   transition: border-color 0.25s;
+}
+.delete-button{
+  margin-right: 10px;
+  color: var(--cp-red);
+  padding: .1em .4em;
+  border: 2px solid var(--main-bg-color);
+  position: sticky;
+  left: 0;
+  
+}
+.delete-button:hover{
+  border-color: var(--cp-red);
 }
 
 button:hover {
@@ -106,7 +143,6 @@ input:not([type="number"]), select{
   border-radius: var(--b-radius-small);
   border-bottom-left-radius: 0;
   padding: 2px 5px;
-  
   box-shadow: 2px 2px 3px var(--shadow);
 
   background: var(--theme-primary-color);
@@ -115,15 +151,20 @@ input:not([type="number"]), select{
   font-weight: 600;
 
   z-index: 999;
+  opacity: .7;
+
+  /* translate: 0 20px; */
 }
 
 .notification.good{
   background: lime;
 }
-.notification.bad{
-  background: var(--cp-red);
+.notification.bad,
+.notification.error{
+  background: var(--cp-red) !important;
   color: white !important;
 }
+
 
 
 
@@ -131,6 +172,7 @@ input:not([type="number"]), select{
   --gap: 10px;
   display: grid;
   min-width: 600px;
+  height: calc(100svh - var(--gap) * 2);
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: min-content min-content 1fr;
   grid-template-areas:
@@ -138,7 +180,7 @@ input:not([type="number"]), select{
     'algo       fitfun       run'
     'results    results      results';
   gap: var(--gap);
-  overflow: auto;
+  overflow: hidden;
 }
 
 
@@ -217,13 +259,24 @@ input[type="file"]{
 #selectFitfunButton{
   border-radius: 10px;
   margin: 0 10px;
-  width: 70%;
+  width: 95%;
   align-self: flex-end;
 }
+#choosenFitfuns>li{
+  width: 250px;
+  display: inline-block;
+  overflow-x: auto;
+  white-space: nowrap;
+  /* outline: 1px solid red; */
+}
+
+
+
 
 #parameters, #dimensions{
   display: flex;
   justify-content: space-around;
+  
 }
 .desc{
   display: block;
@@ -241,6 +294,10 @@ input[type="file"]{
   width: 3em;
   margin: 0 5px;
 }
+#dimensions>label>input[type="text"]{
+  width: 4.5em;
+}
+
 #sectionStart{
   grid-area: run;
 }
@@ -270,6 +327,7 @@ input[type="file"]{
   background-color: var(--second-bg-color);
   border: 5px solid var(--main-bg-color);
   margin: auto;
+  display: block;
 }
 #sectionStart #startButton:not(:disabled):hover, #addQueueButton:hover{
   text-shadow: 0px 0px 5px var(--theme-secondary-color);
@@ -281,6 +339,7 @@ input[type="file"]{
 
 #results {
   grid-area: results;
+  overflow-y: auto;
 }
 
 #helpButton {
@@ -297,4 +356,17 @@ input[type="file"]{
   font-size: 1.5em;
 
   outline: var(--gap) solid var(--main-bg-color);
+}
+.result-separator{
+  border-color: var(--theme-secondary-color) !important;
+  box-shadow: 0px 0px 2px 0px var(--theme-secondary-color) !important;
+  border-radius: 5px;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  position: inherit !important;
+}
+.formattedResponse>p{
+  padding-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const Results = ({ allResponses }) => {
   return (
@@ -8,9 +8,9 @@ export const Results = ({ allResponses }) => {
       {allResponses.map((formattedResponse, index) => (
         <div key={index} className='formattedResponse'>
           <p>{formattedResponse}</p>
-          <hr />
+          <hr className='result-separator' />
         </div>
       ))}
     </div>
-  );
-};
+  )
+}

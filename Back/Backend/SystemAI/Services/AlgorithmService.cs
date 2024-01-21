@@ -490,7 +490,7 @@ namespace SystemAI.Services
         public double LowerBoundary { get; set; }
         
 
-        public ParamInfoResponse(string _name, string _description, double _uppderBoundary, double _lowerBoundary)
+        public ParamInfoResponse(string _name, string _description, double _lowerBoundary, double _uppderBoundary)
         {
             Name = _name;
             Description = _description;
