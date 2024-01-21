@@ -185,7 +185,8 @@ namespace SystemAI.Controllers
     public class AlgorithmRequest
     {
         public string Name { get; set; }
-        public double[] Parameters { get; set; } //c1 c2 ...
+        //public double[] Parameters { get; set; } //c1 c2 ...
+        public double[] Steps { get; set; }
     }
 
     public class MultipleAlgorithmsRunRequest

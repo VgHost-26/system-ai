@@ -11,7 +11,7 @@ namespace SystemAI.Interfaces
         public List<object> LoadFitnessFunctions(string[] functionNames);
         object RunAlgorithm(string algorithmName, List<FitnessFunctionRequest> fitnessFunctionNames, params double[] parameters); // Uruchamia algorytm
 
-        object RunAlgorithms(List<AlgorithmRequest> algorithms, FitnessFunctionRequest fitnessFunctionName, double population, double iteration);
+        object RunAlgorithms(List<AlgorithmRequest> algorithms, FitnessFunctionRequest fitnessFunctionRequest, double population, double iteration);
 
         // Nowe metody
         void AddAlgorithm(string algorithmName, byte[] algorithmData);

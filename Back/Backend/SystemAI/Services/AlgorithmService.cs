@@ -126,36 +126,175 @@ namespace SystemAI.Services
                 response.Add(algorithmResult);
 
                 //Generowanie pdfa
-               /* var pdfReportGenerator = optimizationAlgorithm.GetType().GetProperty("pdfReportGenerator");
+                var pdfReportGenerator = optimizationAlgorithm.GetType().GetProperty("pdfReportGenerator").GetValue(optimizationAlgorithm);
+                
                 var GenerateReport = pdfReportGenerator.GetType().GetMethod("GenerateReport");
 
-                var ParamsInfo = optimizationAlgorithm.GetType().GetProperty("ParamsInfo");
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
-                GenerateReport.Invoke(pdfReportGenerator, new object[] { path, XBest, FBest, NumberOfEvaluationFitnessFunction, ParamsInfo });*/
+                //var path = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
 
-                //usuwanie json
-                /* 
-                 string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Data");
+                var fitnessFunctionName = fitnessFunctionNames.GetValue(i);
+                var path = fitnessFunctionName + "-" + algorithmName + "-" + "Report.pdf";
 
-                 // Pobiera wszystkie pliki .json w folderze
-                 string[] jsonFiles = Directory.GetFiles(folderPath, "*.json");
+                try
+                {
+                    GenerateReport.Invoke(pdfReportGenerator, new object[] { path });
+                }
+                catch (TargetInvocationException ex)
+                {
+                    Console.WriteLine("Szczegóły wyjątku: " + ex.InnerException.Message);
+                }
 
-                 // Iteruje przez wszystkie znalezione pliki i je usuwa
-                 foreach (string file in jsonFiles)
-                 {
-                     File.Delete(file);
-                 }*/
+            //usuwanie json
+            /* 
+             string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Data");
 
-            }
+             // Pobiera wszystkie pliki .json w folderze
+             string[] jsonFiles = Directory.GetFiles(folderPath, "*.json");
+
+             // Iteruje przez wszystkie znalezione pliki i je usuwa
+             foreach (string file in jsonFiles)
+             {
+                 File.Delete(file);
+             }*/
+
+        }
 
             object resposneObject = new { response };
 
             return resposneObject;
         }
 
-        public object RunAlgorithms(List<AlgorithmRequest> algorithms, FitnessFunctionRequest fitnessFunctionName, double population, double iteration)
+        public object RunAlgorithms(List<AlgorithmRequest> algorithms, FitnessFunctionRequest fitnessFunctionRequest, double population, double iteration)
         {
-            throw new NotImplementedException();
+
+            var algorithmNames = new List<string>();
+
+            foreach(var algorithm in algorithms)
+            {
+                algorithmNames.Add(algorithm.Name);
+            }
+
+            List<(object, Type)> optimizationAlgorithms = new List<(object, Type)>();
+
+            foreach (var name in algorithmNames)
+            {
+                (var optimizationAlgorithm, var delegateFunction) = LoadAlgorithm(name);
+                if (optimizationAlgorithm != null && delegateFunction != null)
+                {
+                    optimizationAlgorithms.Add((optimizationAlgorithm, delegateFunction));
+                }
+                else
+                {
+                    throw new InvalidOperationException("Algorithm or Delegate Function could not be loaded.");
+                }
+            }
+
+            var fitnessFunction = LoadFitnessFunctions(new string[] { fitnessFunctionRequest.Name });
+
+            if (fitnessFunction == null)
+            {
+                throw new InvalidOperationException("Fitness function could not be loaded.");
+            }
+          
+            double[,] domain = DeserializeDomain(fitnessFunctionRequest.Domain);
+
+
+            var algorithmsCombinations = new List<Algorithm>();
+
+            var i = 0;
+            foreach (var optimizationAlgorithm in optimizationAlgorithms)
+            {
+                //optimizationAlgorithm.Item1
+                var _name = (string)optimizationAlgorithm.Item1.GetType().GetProperty("Name").GetValue(optimizationAlgorithm.Item1);
+                var paramsInfoArray = (Array)optimizationAlgorithm.Item1.GetType().GetProperty("ParamsInfo").GetValue(optimizationAlgorithm.Item1);
+                //algorithms[0].Steps[0];
+                List<AlgorithmParameter> paramInfoRequests = new List<AlgorithmParameter>();
+
+                var y = 0;
+                foreach (var paramInfo in paramsInfoArray)
+                {                   
+                    double _upperBoundary = (double)paramInfo.GetType().GetProperty("UpperBoundary").GetValue(paramInfo);
+                    double _lowerBoundary = (double)paramInfo.GetType().GetProperty("LowerBoundary").GetValue(paramInfo);                    
+
+
+                    paramInfoRequests.Add(new AlgorithmParameter { UpperBoundary = _lowerBoundary, LowerBoundary = _upperBoundary, Step = algorithms[i].Steps[y] });
+                    y++;
+                }
+
+                i++;
+                algorithmsCombinations.Add(new Algorithm { Name = _name, Parameters = paramInfoRequests });
+            }
+
+
+            Dictionary<string, List<double[]>> allCombinations = new Dictionary<string, List<double[]>>();
+            try
+            {
+                allCombinations = GenerateAllCombinations(algorithmsCombinations);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            //Wypisanie do konsoli wszsytkich mozliwych kombinacji
+            foreach (var algorithm in allCombinations)
+            {
+                Console.WriteLine($"Algorytm: {algorithm.Key}");
+
+                foreach (var combination in algorithm.Value)
+                {
+                    string formattedCombination = string.Join(", ", combination.Select(c => c.ToString("F2"))); // F2 oznacza, że liczby będą formatowane z dwoma miejscami po przecinku
+                    Console.WriteLine($"Kombinacja: [{formattedCombination}]");
+                }
+
+                Console.WriteLine(); 
+            }
+
+            List<AlgorithmResult> bestResults = new List<AlgorithmResult>();
+
+            foreach (var (algorithm, delegateFunction) in optimizationAlgorithms)
+            {
+                string currentName = (string)algorithm.GetType().GetProperty("Name").GetValue(algorithm);
+
+                var solve = algorithm.GetType().GetMethod("Solve");
+
+                var calculateMethodInfo = fitnessFunction[0].GetType().GetMethod("Function");
+                var calculate = Delegate.CreateDelegate(delegateFunction, fitnessFunction[0], calculateMethodInfo);
+
+                double bestF = double.MaxValue; // Zakładając, że im mniejsza wartość F, tym lepsza
+                double[] bestX = null;
+                double[] bestParameters = null;
+
+                foreach (var combination in allCombinations[currentName])
+                {
+                    // Rozszerzenie tablicy o wartości iteracji i populacji
+                    double[] extendedCombination = new double[combination.Length + 2];
+                    combination.CopyTo(extendedCombination, 0);
+                    extendedCombination[combination.Length] = population;
+                    extendedCombination[combination.Length + 1] = iteration;
+                    solve.Invoke(algorithm, new object[] { calculate, domain, extendedCombination });
+
+                    var XBest = algorithm.GetType().GetProperty("XBest");
+                    var FBest = algorithm.GetType().GetProperty("FBest");
+                    
+
+                    var XBestValue = (double[])XBest.GetValue(algorithm);
+                    var FBestValue = (double)FBest.GetValue(algorithm);
+                    
+
+                    if (FBestValue < bestF)
+                    {
+                        bestF = FBestValue;
+                        bestX = XBestValue;
+                        bestParameters = combination;
+                    }
+                }
+
+                bestResults.Add(new AlgorithmResult(currentName, bestParameters, bestF, bestX));
+            }
+
+            return (object)bestResults;
+
         }
 
         // Nowe metody
@@ -226,6 +365,44 @@ namespace SystemAI.Services
 
         }
 
+        public List<double[]> GenerateCombinations(Algorithm algorithm)
+        {
+            return GenerateCombinationsRecursive(algorithm.Parameters, new List<double>(), 0);
+        }
+
+        private List<double[]> GenerateCombinationsRecursive(List<AlgorithmParameter> parameters, List<double> currentCombination, int currentIndex)
+        {
+            List<double[]> combinations = new List<double[]>();
+
+            if (currentIndex == parameters.Count)
+            {
+                combinations.Add(currentCombination.ToArray());
+                return combinations;
+            }
+
+            AlgorithmParameter currentParam = parameters[currentIndex];
+            for (double value = currentParam.LowerBoundary; value <= currentParam.UpperBoundary; value += currentParam.Step)
+            {
+                List<double> newCombination = new List<double>(currentCombination) { value };
+                combinations.AddRange(GenerateCombinationsRecursive(parameters, newCombination, currentIndex + 1));
+            }
+
+            return combinations;
+        }
+
+        public Dictionary<string, List<double[]>> GenerateAllCombinations(List<Algorithm> Algorithms)
+        {
+            Dictionary<string, List<double[]>> allCombinations = new Dictionary<string, List<double[]>>();
+
+            foreach (Algorithm algorithm in Algorithms)
+            {
+                List<double[]> combinations = GenerateCombinations(algorithm);
+                allCombinations.Add(algorithm.Name, combinations);
+            }
+
+            return allCombinations;
+        }
+
         private double[,] DeserializeDomain(string serializedDomain)
         {
             // Deserializacja do listy list lub innego odpowiedniego formatu
@@ -279,24 +456,7 @@ namespace SystemAI.Services
     }
 
     public class FitnesFunctionLoader
-    {
-        /*public object LoadFitnesFunction(string dllPath)
-        {
-            object instance = null;
-            Assembly assembly = Assembly.LoadFrom(dllPath);
-            foreach (Type t in assembly.GetTypes())
-            {
-                if (t.GetInterface("FitnesFunction", true) != null)
-                {
-                    Console.WriteLine("Found Fitnes Function: {0}", t.FullName);
-
-                    instance = Activator.CreateInstance(t);
-
-                    break;
-                }
-            }
-            return instance;
-        }*/
+    {       
         public List<object> LoadFitnesFunctions(string[] fitnessFunctionsNames)
         {
             List<object> fitnessFunctions = new List<object>();
@@ -338,6 +498,35 @@ namespace SystemAI.Services
             LowerBoundary = _lowerBoundary;
         }
 
+    }
+
+    public class AlgorithmParameter
+    {
+        public double LowerBoundary { get; set; }
+        public double UpperBoundary { get; set; }
+        public double Step { get; set; }
+    }
+
+    public class Algorithm
+    {
+        public string Name { get; set; }
+        public List<AlgorithmParameter> Parameters { get; set; }
+    }
+
+    public class AlgorithmResult
+    {
+        public string AlgorithmName { get; set; }
+        public double[] BestParameters { get; set; }
+        public double BestF { get; set; }
+        public double[] BestX { get; set; }
+
+        public AlgorithmResult(string algorithmName, double[] bestParameters, double bestF, double[] bestX)
+        {
+            AlgorithmName = algorithmName;
+            BestParameters = bestParameters;
+            BestF = bestF;
+            BestX = bestX;
+        }
     }
 }
 
