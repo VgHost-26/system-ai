@@ -217,7 +217,7 @@ namespace SystemAI.Services
                     double _lowerBoundary = (double)paramInfo.GetType().GetProperty("LowerBoundary").GetValue(paramInfo);                    
 
 
-                    paramInfoRequests.Add(new AlgorithmParameter { UpperBoundary = _lowerBoundary, LowerBoundary = _upperBoundary, Step = algorithms[i].Steps[y] });
+                    paramInfoRequests.Add(new AlgorithmParameter { UpperBoundary = _upperBoundary, LowerBoundary = _lowerBoundary, Step = algorithms[i].Steps[y] });
                     y++;
                 }
 
@@ -434,6 +434,7 @@ namespace SystemAI.Services
             object instance = null;
             Type delegateFunction = null;
             Assembly assembly = Assembly.LoadFrom(dllPath);
+
             foreach (Type t in assembly.GetTypes())
             {
                 //Console.WriteLine(t.FullName);
@@ -448,7 +449,7 @@ namespace SystemAI.Services
                 }
             }
 
-            delegateFunction = assembly.GetType("Archimedes.fitnessFunction");
+            delegateFunction = assembly.GetType("fitnessFunction");           
 
             return (instance, delegateFunction);
             //throw new InvalidOperationException("No valid algorithm found in DLL.");
