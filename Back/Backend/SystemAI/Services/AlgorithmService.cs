@@ -133,7 +133,7 @@ namespace SystemAI.Services
                 //var path = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
 
                 var fitnessFunctionName = fitnessFunctionNames.GetValue(i);
-                var path = fitnessFunctionName + "-" + algorithmName + "-" + "Report.pdf";
+                var path = fitnessFunctionName + "-" + algorithmName + "-" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + "-" + "Raport.pdf";
 
                 try
                 {
@@ -291,6 +291,25 @@ namespace SystemAI.Services
                 }
 
                 bestResults.Add(new AlgorithmResult(currentName, bestParameters, bestF, bestX));
+
+                //Generowanie pdfa
+                var pdfReportGenerator = algorithm.GetType().GetProperty("pdfReportGenerator").GetValue(algorithm);
+
+                var GenerateReport = pdfReportGenerator.GetType().GetMethod("GenerateReport");
+
+                //var path = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
+
+                var fitnessFunctionName = fitnessFunctionRequest.Name;
+                var path = fitnessFunctionName + "-" + currentName + "-" + "ResultForBestParams" + "-" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + "-" + "Raport.pdf";
+
+                try
+                {
+                    GenerateReport.Invoke(pdfReportGenerator, new object[] { path });
+                }
+                catch (TargetInvocationException ex)
+                {
+                    Console.WriteLine("Szczegóły wyjątku: " + ex.InnerException.Message);
+                }
             }
 
             return (object)bestResults;
