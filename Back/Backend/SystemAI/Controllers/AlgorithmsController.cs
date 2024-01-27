@@ -14,6 +14,7 @@ namespace SystemAI.Controllers
 
         private readonly IAlgorithmService _algorithmService;
         private readonly IFitnessFunctionService _fitnessFunction;
+        private CalculationStateService _calculationStateService = new CalculationStateService();
 
         public AlgorithmsController(IAlgorithmService algorithmService, IFitnessFunctionService fitnessFunctionService)
         {
@@ -36,6 +37,7 @@ namespace SystemAI.Controllers
         {
             try
             {
+                _calculationStateService.isFinished = false;
                 var result = _algorithmService.RunAlgorithm(request.AlgorithmName, request.FitnessFunctions, request.Parameters);
                 return Ok(result);
             }
@@ -131,6 +133,20 @@ namespace SystemAI.Controllers
             }
         }
 
+        [HttpPost("stopCalculations")]
+        public IActionResult StopCalculations()
+        {
+            _calculationStateService.stopCalcFlag = true;
+            return Ok("Calculations stopped.");
+        }
+
+        [HttpPost("resumeCalculations")]
+        public IActionResult ResumeCalculations()
+        {
+            //_algorithmService.ResumeCalculation();
+            return Ok("Calculations resumed.");
+        }
+
         //Fitness function
 
         // GET: api/Functions
@@ -198,4 +214,9 @@ namespace SystemAI.Controllers
 
     }
 
+    public class CalculationStateService
+    {
+        public bool stopCalcFlag { get; set; } = false;
+        public bool isFinished { get; set; } = true;
+    }
 }
