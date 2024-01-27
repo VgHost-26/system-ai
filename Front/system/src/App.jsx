@@ -11,12 +11,17 @@ import { Restore } from './components/Restore'
 import axios from 'axios'
 import { Notify } from './components/Notify'
 
-const authors = ['Marcin Widuch', 'Bartek', 'Arseni', 'Paweł Cyrkowski']
+const authors = [
+  'Marcin Widuch',
+  'Bartek Głuchowicz',
+  'Arseni Mokhau',
+  'Paweł Cykowski',
+]
 authors.sort(() => Math.random() - 0.5)
 const testModeEnum = {
   SINGLE_ALGORITHM: 'Pojedynczy algorytm',
   MULTIPLE_ALGORITHMS: 'Wiele algorytmów',
-};
+}
 
 const apiURL = 'http://localhost:5076/api'
 const endpointGetAlgos = '/Algorithms'
@@ -32,11 +37,20 @@ function App() {
   const [allResponses, setAllResponses] = useState([])
   const [iterations, setIterations] = useState(10)
   const [population, setPopulation] = useState(10)
-  const [notificationFuns, setNotificationFuns] = useState({ type: '', message: '' })
-  const [notificationStart, setNotificationStart] = useState({ type: '', message: '' })
-  const [notificationAlgos, setNotificationAlgos] = useState({ type: '', message: '' })
-  const [testMode, setTestMode] = useState(testModeEnum.SINGLE_ALGORITHM);
-  const [selAlgoList, setSelAlgoList] = useState([]);
+  const [notificationFuns, setNotificationFuns] = useState({
+    type: '',
+    message: '',
+  })
+  const [notificationStart, setNotificationStart] = useState({
+    type: '',
+    message: '',
+  })
+  const [notificationAlgos, setNotificationAlgos] = useState({
+    type: '',
+    message: '',
+  })
+  const [testMode, setTestMode] = useState(testModeEnum.SINGLE_ALGORITHM)
+  const [selAlgoList, setSelAlgoList] = useState([])
 
   const showNotificationFuns = (message, type) => {
     setNotificationFuns({ message, type })
@@ -89,23 +103,26 @@ function App() {
     axios
       .get(apiURL + endpointGetAlgos)
       .then(response => {
-        let fetchedAlgos;
-  
+        let fetchedAlgos
+
         if (typeof response.data === 'string') {
-          fetchedAlgos = response.data.split(',');
+          fetchedAlgos = response.data.split(',')
         } else if (Array.isArray(response.data)) {
-          fetchedAlgos = response.data;
+          fetchedAlgos = response.data
         } else {
-          console.error('Unexpected response format for fit functions:', response);
-          return;
+          console.error(
+            'Unexpected response format for fit functions:',
+            response
+          )
+          return
         }
-  
+
         // Use Set to ensure uniqueness
-        const uniqueAlgoNamesSet = new Set(fetchedAlgos);
-  
+        const uniqueAlgoNamesSet = new Set(fetchedAlgos)
+
         // Convert Set back to an array
-        const uniqueAlgoNamesArray = Array.from(uniqueAlgoNamesSet);
-  
+        const uniqueAlgoNamesArray = Array.from(uniqueAlgoNamesSet)
+
         // Fetch algorithm details for unique names
         Promise.all(
           uniqueAlgoNamesArray.map(algoName =>
@@ -116,20 +133,19 @@ function App() {
             const updatedAlgos = responses.map((response, index) => ({
               name: uniqueAlgoNamesArray[index],
               params: response.data,
-            }));
-  
+            }))
+
             // Set unique algorithms in the state
-            setAlgos(updatedAlgos);
+            setAlgos(updatedAlgos)
           })
           .catch(error => {
-            console.error('Error while adding algos: ', error);
-          });
+            console.error('Error while adding algos: ', error)
+          })
       })
       .catch(error => {
-        console.error('Error fetching algos: ', error);
-      });
-  };
-  
+        console.error('Error fetching algos: ', error)
+      })
+  }
 
   function addAlgo(name, newAlgo) {
     // wysłanie funkcji na serwer
@@ -194,7 +210,7 @@ function App() {
   }
 
   function startAlgo() {
-    if (testMode === testModeEnum.SINGLE_ALGORITHM){
+    if (testMode === testModeEnum.SINGLE_ALGORITHM) {
       setIsInProgress(true)
       const algoParams = [
         ...params.map(param => param.value),
@@ -223,58 +239,17 @@ function App() {
           setIsInProgress(false)
           const formattedResponses = response.data.response.map(
             (res, index) =>
-              `(${testMode === testModeEnum.SINGLE_ALGORITHM ? 'P' : 'W'}) Algorytm: ${selAlgo.name}, [${params.map(param => param.value)}] Funkcja: ${selFitfuns[index].name}, Wymiar: ${selFitfuns[index].domain} - XBest: [${res.xBestValue.join(', ')}], FBest: ${res.fBestValue}`
+              `(${
+                testMode === testModeEnum.SINGLE_ALGORITHM ? 'P' : 'W'
+              }) Algorytm: ${selAlgo.name}, [${params.map(
+                param => param.value
+              )}] Funkcja: ${selFitfuns[index].name}, Wymiar: ${
+                selFitfuns[index].domain
+              } - XBest: [${res.xBestValue.join(', ')}], FBest: ${
+                res.fBestValue
+              }`
           )
-  
-          setAllResponses(prevResponses => [
-            ...formattedResponses,
-            ...prevResponses,
-          ])
-  
-          console.log(
-            selFitfuns.map(fun => ({
-              name: fun.name,
-              domain: fun.domain,
-            }))
-          )
-          console.log('Response from server:', response.data)
-        })
-        .catch(error => {
-          showNotificationStart('There was an error sending the request', 'error');
-          console.error('There was an error sending the POST request:', error)
-          setIsInProgress(false)
-        })
-    }
-    else if (testMode === testModeEnum.MULTIPLE_ALGORITHMS){
-      setIsInProgress(true)
-      axios
-        .post(
-          apiURL + endpointRunMultiple,
-          {
-            algorithms: selAlgoList.map(alg => ({
-              name: alg.name,
-              steps: alg.steps,
-            })),
-            fitnessFunction: {
-              name: selFitfuns[0].name,
-              domain: selFitfuns[0].domain
-            },
-            population: parseInt(population),
-            iteration: parseInt(iterations)
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-        .then(response => {
-          setIsInProgress(false)
-          const formattedResponses = response.data.map(
-            (res, index) =>
-              `(${testMode === testModeEnum.SINGLE_ALGORITHM ? 'P' : 'W'}) Algorytm: ${res.algorithmName}, [${res.bestParameters}], Funkcja: ${selFitfuns[0].name}, Wymiar: ${selFitfuns[0].domain} - XBest: [${res.bestX.join(', ')}], FBest: ${res.bestF}`
-          );
-  
+
           setAllResponses(prevResponses => [
             ...formattedResponses,
             ...prevResponses,
@@ -289,7 +264,67 @@ function App() {
           console.log('Response from server:', response.data)
         })
         .catch(error => {
-          showNotificationStart('There was an error sending the request', 'error');
+          showNotificationStart(
+            'There was an error sending the request',
+            'error'
+          )
+          console.error('There was an error sending the POST request:', error)
+          setIsInProgress(false)
+        })
+    } else if (testMode === testModeEnum.MULTIPLE_ALGORITHMS) {
+      setIsInProgress(true)
+      axios
+        .post(
+          apiURL + endpointRunMultiple,
+          {
+            algorithms: selAlgoList.map(alg => ({
+              name: alg.name,
+              steps: alg.steps,
+            })),
+            fitnessFunction: {
+              name: selFitfuns[0].name,
+              domain: selFitfuns[0].domain,
+            },
+            population: parseInt(population),
+            iteration: parseInt(iterations),
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(response => {
+          setIsInProgress(false)
+          const formattedResponses = response.data.map(
+            (res, index) =>
+              `(${
+                testMode === testModeEnum.SINGLE_ALGORITHM ? 'P' : 'W'
+              }) Algorytm: ${res.algorithmName}, [${
+                res.bestParameters
+              }], Funkcja: ${selFitfuns[0].name}, Wymiar: ${
+                selFitfuns[0].domain
+              } - XBest: [${res.bestX.join(', ')}], FBest: ${res.bestF}`
+          )
+
+          setAllResponses(prevResponses => [
+            ...formattedResponses,
+            ...prevResponses,
+          ])
+
+          console.log(
+            selFitfuns.map(fun => ({
+              name: fun.name,
+              domain: fun.domain,
+            }))
+          )
+          console.log('Response from server:', response.data)
+        })
+        .catch(error => {
+          showNotificationStart(
+            'There was an error sending the request',
+            'error'
+          )
           console.error('There was an error sending the POST request:', error)
           setIsInProgress(false)
         })

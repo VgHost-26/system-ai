@@ -17,6 +17,25 @@
   --second-bg-color:#222323;
 
   background-color: var(--main-bg-color);
+  --button-color: var(--cp-blue);
+  --notify-good:lime;
+}
+
+@media (prefers-color-scheme: light) {
+  :root{
+
+    --theme-primary-color: #00f0ff;
+    --theme-secondary-color: #F3E600;
+    --theme-pprimary-color:#fc012a; 
+    --text-color:black;
+    --text-color-dimmed:gray;
+    --shadow:rgba(10,10,10,.3);
+  
+    --main-bg-color:#bbb;
+    --second-bg-color:#eee;
+    --button-color:#008791;
+    --notify-good:green;
+  }
 }
 
 .material-symbols-outlined {
@@ -104,7 +123,7 @@ button:focus-visible {
 }
 
 button{
-  color: var(--cp-blue);
+  color: var(--button-color);
 }
 button:disabled,
 input:disabled{
@@ -128,7 +147,7 @@ p{
   color: var(--cp-red) !important;
 }
 .info{
-  color: var(--cp-blue) !important;
+  color: var(--button-color) !important;
 }
 input:not([type="number"]), select{
   font-size: 1rem;
@@ -157,7 +176,7 @@ input:not([type="number"]), select{
 }
 
 .notification.good{
-  background: lime;
+  background: var(--notify-good);
 }
 .notification.bad,
 .notification.error{
