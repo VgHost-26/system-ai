@@ -240,12 +240,12 @@ function App() {
           const formattedResponses = response.data.response.map(
             (res, index) =>
               `(${
-                testMode === testModeEnum.SINGLE_ALGORITHM ? 'P' : 'W'
-              }) Algorytm: ${selAlgo.name}, [${params.map(
+                testMode === testModeEnum.SINGLE_ALGORITHM ? 'Pojedynczy algorytm' : 'Wiele algorytmów'
+              })<br/> Algorytm: ${selAlgo.name}, [${params.map(
                 param => param.value
-              )}] Funkcja: ${selFitfuns[index].name}, Wymiar: ${
+              )}]<br/> Funkcja: ${selFitfuns[index].name}, Wymiar: ${
                 selFitfuns[index].domain
-              } - XBest: [${res.xBestValue.join(', ')}], FBest: ${
+              }<br/> XBest: [${res.xBestValue.join(', ')}], FBest: ${
                 res.fBestValue
               }`
           )
@@ -299,12 +299,12 @@ function App() {
           const formattedResponses = response.data.map(
             (res, index) =>
               `(${
-                testMode === testModeEnum.SINGLE_ALGORITHM ? 'P' : 'W'
-              }) Algorytm: ${res.algorithmName}, [${
+                testMode === testModeEnum.SINGLE_ALGORITHM ? 'Pojedynczy algorytm' : 'Wiele algorytmów'
+              })<br/> Algorytm: ${res.algorithmName}, [${
                 res.bestParameters
-              }], Funkcja: ${selFitfuns[0].name}, Wymiar: ${
+              }]<br/> Funkcja: ${selFitfuns[0].name}, Wymiar: ${
                 selFitfuns[0].domain
-              } - XBest: [${res.bestX.join(', ')}], FBest: ${res.bestF}`
+              }<br/> XBest: [${res.bestX.join(', ')}], FBest: ${res.bestF}`
           )
 
           setAllResponses(prevResponses => [

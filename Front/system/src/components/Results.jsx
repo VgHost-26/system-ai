@@ -7,7 +7,7 @@ export const Results = ({ allResponses }) => {
       <hr />
       {allResponses.map((formattedResponse, index) => (
         <div key={index} className='formattedResponse'>
-          <p>{formattedResponse}</p>
+          <p dangerouslySetInnerHTML={{ __html: formattedResponse }}></p>
           <hr className='result-separator' />
         </div>
       ))}
