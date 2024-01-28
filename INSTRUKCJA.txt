@@ -1,0 +1,18 @@
+Aby uruchomić nasz system należy wykonac następujące kroki:
+
+Wymagania:
+wersja .NET: 7.0
+wersja nodeJS: około 20.7.0
+wersja npm: 10.1.0
+pakiet npm vite
+
+A) Uruchomienie serwera:
+	1) uruchom plik Visual Studio "system-ai\Back\Backend\SystemAI.sln"
+	2) uruchomić server w trybie http (bez s) [F5] 
+
+
+B) Uruchomienie aplikacji front-end:
+	1) otworzyć folder "system-ai\Front\system" w terminalu
+	2) wpisać komendę "npm run dev"
+	3) jeśli przeglądarka nie otworzy się automatycznie nacisnąć O (o jak open) na klawiaturze
+	4) dalej podążaj za instrukcją dostepną w aplikacji front-end 
