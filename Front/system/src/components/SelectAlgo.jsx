@@ -19,7 +19,7 @@ export const SelectAlgo = ({
   ]
 
   const [tmpSteps, setTmpSteps] = useState('')
-
+  const [steps, setSteps] = useState([])
   useEffect(() => {
     if (selAlgo) {
       setParams(
@@ -50,6 +50,7 @@ export const SelectAlgo = ({
     setSelAlgo(selectedAlgorithm)
 
     // Clear temporary steps and reset parameters
+    setSteps(Array(selectedAlgorithm.params.length).fill(1))
     setTmpSteps('')
     setParams(
       selectedAlgorithm.params.map(p => ({
@@ -86,13 +87,13 @@ export const SelectAlgo = ({
   }
 
   const handleAddToAlgoList = () => {
-    const newSteps = generateSteps()
+    // const newSteps = generateSteps()
 
     // Check if the algorithm with the same name is already in the list
     const isDuplicate = selAlgoList.some(algo => algo.name === selAlgo.name)
 
-    if (!isDuplicate && newSteps != null) {
-      setSelAlgoList([...selAlgoList, { name: selAlgo.name, steps: newSteps }])
+    if (!isDuplicate && steps != []) {
+      setSelAlgoList([...selAlgoList, { name: selAlgo.name, steps: steps }])
       showNotification('')
     } else if (isDuplicate) {
       showNotification(
@@ -108,6 +109,14 @@ export const SelectAlgo = ({
     const updatedAlgoList = [...selAlgoList]
     updatedAlgoList.splice(index, 1)
     setSelAlgoList(updatedAlgoList)
+  }
+
+  function updateSteps(i, newVal) {
+    setSteps(
+      steps.map((s, si) => {
+        return si === i ? newVal : s
+      })
+    )
   }
 
   function parseValues(input) {
@@ -230,16 +239,26 @@ export const SelectAlgo = ({
                 )}
               </select>
             </div>
-            <label htmlFor='chooseMin' className=''>
-              Steps:
-              <input
-                id='chooseSteps'
-                type='text'
-                placeholder='1, 2, 3, ...'
-                value={tmpSteps}
-                onChange={e => setTmpSteps(e.target.value)}
-              />
-            </label>
+            <div>
+              <p className='desc'>Krok parametrów:</p>
+              <div id='parameters'>
+                {selAlgo && params ? (
+                  selAlgo.params.map((p, i) => (
+                    <label key={p.name} title={p.description}>
+                      {p.name}
+                      <input
+                        type='number'
+                        min={0}
+                        onChange={e => updateSteps(i, e.target.value)}
+                        value={steps[i]}
+                      />
+                    </label>
+                  ))
+                ) : (
+                  <>-</>
+                )}
+              </div>
+            </div>
             {/* Button to add the selected algorithm to the list */}
             <input
               disabled={!selAlgo}

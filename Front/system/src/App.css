@@ -286,7 +286,7 @@ input[type="file"]{
   align-self: flex-end;
 }
 #addAlgoButtonQ{
-  margin: 10px 0px;
+  margin: 0px 0px;
   width: 55%;
 }
 #selectFitfunButton{
