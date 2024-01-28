@@ -427,6 +427,8 @@ namespace SystemAI.Services
             var paramsInfoArray = (Array)optimizationAlgorithm.GetType().GetProperty("ParamsInfo").GetValue(optimizationAlgorithm);
 
             List<ParamInfoResponse> paramInfoRequests = new List<ParamInfoResponse>();
+            if(paramsInfoArray != null)
+            {
 
             foreach (var paramInfo in paramsInfoArray)
             {
@@ -437,7 +439,8 @@ namespace SystemAI.Services
                 //double _step = (double)paramInfo.GetType().GetProperty("Step").GetValue(paramInfo);
 
 
-                paramInfoRequests.Add(new ParamInfoResponse(_name, _description, _upperBoundary, _lowerBoundary));               
+                paramInfoRequests.Add(new ParamInfoResponse(_name, _description, _lowerBoundary, _upperBoundary));               
+            }
             }
 
             Console.WriteLine(paramInfoRequests);
