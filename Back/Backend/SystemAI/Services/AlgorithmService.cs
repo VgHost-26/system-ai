@@ -157,7 +157,7 @@ namespace SystemAI.Services
                  File.Delete(file);
              }*/
 
-        }
+            }
 
             object resposneObject = new { response };
 
@@ -314,6 +314,67 @@ namespace SystemAI.Services
 
             return (object)bestResults;
 
+        }
+
+        public object RunAlgorithmTSFDE(string algorithmName, string Domain, params double[] Parameteres)
+        {
+            (var optimizationAlgorithm, var delegateFunction) = LoadAlgorithm(algorithmName);
+            if (optimizationAlgorithm == null)
+            {
+                throw new InvalidOperationException("Algorithm could not be loaded.");
+            }
+            else if (delegateFunction == null)
+            {
+                throw new InvalidOperationException("Delegate Function could not be loaded.");
+            }
+
+            //object fitnessFunction;
+
+            var _Domain = DeserializeDomain(Domain);
+
+            var fitnessFunctionFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "Functions");
+            string dllPath = Path.Combine(fitnessFunctionFolderPath, "TSFDE.dll");
+
+            Assembly assembly = Assembly.LoadFrom(dllPath);
+
+            Type t = assembly.GetType("TSFDE_fractional_boundary_condition.TSFDE_fractional_boundary");
+            var fitnessFunction = Activator.CreateInstance(t);
+
+            var solve = optimizationAlgorithm.GetType().GetMethod("Solve");
+
+            var calculateMethodInfo = fitnessFunction.GetType().GetMethod("fintnessFunction");
+            var calculate = Delegate.CreateDelegate(delegateFunction, fitnessFunction, calculateMethodInfo);
+            solve.Invoke(optimizationAlgorithm, new object[] { calculate, _Domain, Parameteres });
+
+            var XBest = optimizationAlgorithm.GetType().GetProperty("XBest");
+            var FBest = optimizationAlgorithm.GetType().GetProperty("FBest");
+            var NumberOfEvaluationFitnessFunction = optimizationAlgorithm.GetType().GetProperty("NumberOfEvaluationFitnessFunction");
+
+            var XBestValue = (double[])XBest.GetValue(optimizationAlgorithm);
+            var FBestValue = (double)FBest.GetValue(optimizationAlgorithm);
+            var NumberOfEvaluationFitnessFunctionValue = (int)NumberOfEvaluationFitnessFunction.GetValue(optimizationAlgorithm);
+
+            Console.WriteLine(XBestValue);
+            Console.WriteLine(FBestValue);
+            Console.WriteLine(NumberOfEvaluationFitnessFunctionValue);
+
+
+            //Generowanie pdfa
+            var pdfReportGenerator = optimizationAlgorithm.GetType().GetProperty("pdfReportGenerator").GetValue(optimizationAlgorithm);
+
+            var GenerateReport = pdfReportGenerator.GetType().GetMethod("GenerateReport");
+            var path = "TSFDE" + "-" + algorithmName + "-" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + "-" + "Raport.pdf";
+
+            try
+            {
+                GenerateReport.Invoke(pdfReportGenerator, new object[] { path });
+            }
+            catch (TargetInvocationException ex)
+            {
+                Console.WriteLine("Szczegóły wyjątku: " + ex.InnerException.Message);
+            }
+
+            return null;
         }
 
         // Nowe metody

@@ -13,6 +13,7 @@ namespace SystemAI.Interfaces
 
         object RunAlgorithms(List<AlgorithmRequest> algorithms, FitnessFunctionRequest fitnessFunctionRequest, double population, double iteration);
 
+        object RunAlgorithmTSFDE(string algorithmName, string Domain, params double[] Parameteres);
         // Nowe metody
         void AddAlgorithm(string algorithmName, byte[] algorithmData);
         void UpdateAlgorithm(string algorithmName, byte[] algorithmData);

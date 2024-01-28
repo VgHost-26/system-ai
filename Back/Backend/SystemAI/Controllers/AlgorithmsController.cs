@@ -147,6 +147,21 @@ namespace SystemAI.Controllers
             return Ok("Calculations resumed.");
         }
 
+        //GTOA //TSFDE
+        [HttpPost("TSFDE")]
+        public IActionResult TSFDE([FromBody] tsfdeRequest request)
+        {
+            try
+            {
+                var result = _algorithmService.RunAlgorithmTSFDE(request.AlgorithmName, request.Domain, request.Parameters);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         //Fitness function
 
         // GET: api/Functions
@@ -195,6 +210,17 @@ namespace SystemAI.Controllers
     {
         public string AlgorithmName { get; set; }
         public List<FitnessFunctionRequest> FitnessFunctions { get; set; }
+        public double[] Parameters { get; set; }
+    }
+
+    public class tsfdeRequest
+    {
+        public string AlgorithmName { get; set; }
+        //public double[] a { get; set; }
+        //public double[] b { get; set; }
+        public string Domain { get; set; }
+        //public int population { get; set; }
+        //public int iterations { get; set; }
         public double[] Parameters { get; set; }
     }
 
