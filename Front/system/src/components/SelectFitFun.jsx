@@ -182,7 +182,7 @@ export const SelectFitFun = ({
                 (!tmpDim || !tmpFitfun || !tmpMin || !tmpMax) &&
                 tmpFitfun !== 'TSFDE'
               }
-              className=''
+              className='addToQButton'
               type='submit'
               value='+'
               onClick={handleChooseFitfun}
