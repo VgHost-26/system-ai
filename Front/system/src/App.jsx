@@ -375,11 +375,13 @@ function App() {
                 testMode === testModeEnum.SINGLE_ALGORITHM
                   ? 'Pojedynczy algorytm'
                   : 'Wiele algorytmów'
-              })<br/> Algorytm: ${res.algorithmName}, [${
-                res.bestParameters
-              }]<br/> Funkcja: ${selFitfuns[0].name}, Wymiar: ${
-                selFitfuns[0].domain
-              }<br/> XBest: [${res.bestX.join(', ')}], FBest: ${res.bestF}`
+              }) <br/> Data: ${getNowTimeInNiceFormat()}<br/> Algorytm: ${
+                res.algorithmName
+              }, [${res.bestParameters}]<br/> Funkcja: ${
+                selFitfuns[0].name
+              }, Wymiar: ${selFitfuns[0].domain}<br/> XBest: [${res.bestX.join(
+                ', '
+              )}], FBest: ${res.bestF}`
           )
 
           setAllResponses(prevResponses => [
