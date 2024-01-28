@@ -240,10 +240,14 @@ function App() {
           const formattedResponses = response.data.response.map(
             (res, index) =>
               `(${
-                testMode === testModeEnum.SINGLE_ALGORITHM ? 'Pojedynczy algorytm' : 'Wiele algorytmów'
-              })<br/> Algorytm: ${selAlgo.name}, [${params.map(
-                param => param.value
-              )}]<br/> Funkcja: ${selFitfuns[index].name}, Wymiar: ${
+                testMode === testModeEnum.SINGLE_ALGORITHM
+                  ? 'Pojedynczy algorytm'
+                  : 'Wiele algorytmów'
+              }) <br/> Data: ${getNowTimeInNiceFormat()} <br/> Algorytm: ${
+                selAlgo.name
+              }, [${params.map(param => param.value)}]<br/> Funkcja: ${
+                selFitfuns[index].name
+              }, Wymiar: ${
                 selFitfuns[index].domain
               }<br/> XBest: [${res.xBestValue.join(', ')}], FBest: ${
                 res.fBestValue
@@ -299,7 +303,9 @@ function App() {
           const formattedResponses = response.data.map(
             (res, index) =>
               `(${
-                testMode === testModeEnum.SINGLE_ALGORITHM ? 'Pojedynczy algorytm' : 'Wiele algorytmów'
+                testMode === testModeEnum.SINGLE_ALGORITHM
+                  ? 'Pojedynczy algorytm'
+                  : 'Wiele algorytmów'
               })<br/> Algorytm: ${res.algorithmName}, [${
                 res.bestParameters
               }]<br/> Funkcja: ${selFitfuns[0].name}, Wymiar: ${
@@ -329,6 +335,13 @@ function App() {
           setIsInProgress(false)
         })
     }
+  }
+
+  const getNowTimeInNiceFormat = () => {
+    let now = new Date()
+    let time = now.toISOString()
+    time = time.substring(time.indexOf('T') + 1, time.indexOf('.'))
+    return time
   }
 
   const formatResponse = response => {
