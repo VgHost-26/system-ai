@@ -1,15 +1,15 @@
-import React from "react"
+import React from 'react'
 
 export const Restore = ({
-  restorePoints = [{ name: "test1" }, { name: "test2" }],
+  restorePoints = [{ name: 'test1' }, { name: 'test2' }],
 }) => {
   return (
-    <div id='sectionRestore' className='section'>
+    <div id='sectionRestore' className='section section-disabled'>
       <p className='sectionTitle'>Przywróć</p>
       <hr />
 
-      <select defaultValue={"default"}>
-        <option value={"default"} hidden>
+      <select defaultValue={'default'}>
+        <option value={'default'} hidden>
           Wybierz punkt przywracania
         </option>
         {restorePoints != [] ? (
@@ -17,7 +17,7 @@ export const Restore = ({
             return <option value={rp.name}>{rp.name}</option>
           })
         ) : (
-          <option value={"none"} disabled>
+          <option value={'none'} disabled>
             Brak plików do przywrócenia
           </option>
         )}

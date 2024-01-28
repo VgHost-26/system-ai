@@ -138,7 +138,7 @@ export const Start = ({
           </button> */}
         </div>
         {loading ? (
-          <span class='material-symbols-outlined loading-circle'>
+          <span className='material-symbols-outlined loading-circle'>
             progress_activity
           </span>
         ) : (

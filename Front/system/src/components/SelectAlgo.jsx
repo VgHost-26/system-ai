@@ -243,8 +243,8 @@ export const SelectAlgo = ({
             {/* Button to add the selected algorithm to the list */}
             <input
               disabled={!selAlgo}
-              id='selectFitfunButton'
-              className=''
+              id='addAlgoButtonQ'
+              className='addToQButton'
               type='submit'
               value='+'
               onClick={handleAddToAlgoList}

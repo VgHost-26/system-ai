@@ -127,7 +127,7 @@ button{
 }
 button:disabled,
 input:disabled{
-  color: var(--text--color-dimmed);
+  color: var(--text-color-dimmed);
   cursor:not-allowed;
 }
 button:disabled:hover{
@@ -214,15 +214,17 @@ input:not([type="number"]), select{
 }
 .sectionTitle{
   font-size: 1.5rem;
-
-  color: var(--text--color-dimmed);
+  color: var(--text-color-dimmed) !important;
   background-color:var(--second-bg-color);
   box-shadow: 0 0 0 20px var(--second-bg-color);
 
   position: sticky;
   top: 0;
 }
-
+.section-disabled{
+  filter: grayscale(1) blur(1px);
+  cursor:not-allowed;
+}
 
 .section hr{
   border-color: var(--theme-primary-color);
@@ -240,6 +242,10 @@ input:not([type="number"]), select{
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+.addAlgoButtonQ{
+
+}
+
 #addAlgorithm {
   grid-area: add-algo;
 }
@@ -275,11 +281,17 @@ input[type="file"]{
 #selectFitFun form>div>:not(label){
   width: 65%;
 }
-#selectFitfunButton{
+.addToQButton{
   border-radius: 10px;
+  align-self: flex-end;
+}
+#addAlgoButtonQ{
+  margin: 10px 0px;
+  width: 55%;
+}
+#selectFitfunButton{
   margin: 0 10px;
   width: 95%;
-  align-self: flex-end;
 }
 #choosenFitfuns>li{
   width: 250px;

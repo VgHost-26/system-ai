@@ -31,6 +31,7 @@ const endpointRunMultiple = '/run-multiple'
 const andpointAddFitfun = '/addFitnessFunction?name='
 const endpointAddAlgo = '/addAlgorithm?name='
 const endpointGetAlgosInfo = '/ParamsInfo?algorithmName='
+const endpointRunTSFDE = '/TSFDE'
 
 function App() {
   const [serverResponse, setServerResponse] = useState(null)
@@ -172,17 +173,17 @@ function App() {
       })
   }
 
-  function takeFunctionsFromServer() {
-    axios
-      .get(apiURL + endpointGetFunctions)
-      .then(response => {
-        console.log(response.data)
-        setFitfuns(response.data)
-      })
-      .catch(error => {
-        console.error('Błąd:' + error)
-      })
-  }
+  // function takeFunctionsFromServer() {
+  //   axios
+  //     .get(apiURL + endpointGetFunctions)
+  //     .then(response => {
+  //       console.log(response.data)
+  //       setFitfuns(response.data)
+  //     })
+  //     .catch(error => {
+  //       console.error('Błąd:' + error)
+  //     })
+  // }
 
   function addFitFun(name, newFun) {
     // wysłanie funkcji na serwer
@@ -212,69 +213,137 @@ function App() {
   function startAlgo() {
     if (testMode === testModeEnum.SINGLE_ALGORITHM) {
       setIsInProgress(true)
-      const algoParams = [
-        ...params.map(param => param.value),
-        iterations,
-        population,
-      ]
-      console.log(algoParams)
-      axios
-        .post(
-          apiURL + endpointRun,
-          {
-            algorithmName: selAlgo.name,
-            fitnessFunctions: selFitfuns.map(fun => ({
-              name: fun.name,
-              domain: fun.domain,
-            })),
-            parameters: algoParams,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
+
+      if (selFitfuns[0].name == 'TSFDE') {
+        const algoParams = [
+          ...params.map(param => param.value),
+          iterations,
+          population,
+        ]
+        console.log('TEST', {
+          algorithmName: selAlgo.name,
+          domain: selFitfuns[0].domain,
+          parameters: algoParams,
+        })
+        axios
+          .post(
+            apiURL + endpointRunTSFDE,
+            {
+              algorithmName: selAlgo.name,
+              domain: selFitfuns[0].domain,
+              parameters: algoParams,
             },
-          }
-        )
-        .then(response => {
-          setIsInProgress(false)
-          const formattedResponses = response.data.response.map(
-            (res, index) =>
-              `(${
-                testMode === testModeEnum.SINGLE_ALGORITHM
-                  ? 'Pojedynczy algorytm'
-                  : 'Wiele algorytmów'
-              }) <br/> Data: ${getNowTimeInNiceFormat()} <br/> Algorytm: ${
-                selAlgo.name
-              }, [${params.map(param => param.value)}]<br/> Funkcja: ${
-                selFitfuns[index].name
-              }, Wymiar: ${
-                selFitfuns[index].domain
-              }<br/> XBest: [${res.xBestValue.join(', ')}], FBest: ${
-                res.fBestValue
-              }`
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
           )
+          .then(response => {
+            setIsInProgress(false)
+            const formattedResponses = response.data.response.map(
+              (res, index) =>
+                `(${
+                  testMode === testModeEnum.SINGLE_ALGORITHM
+                    ? 'Pojedynczy algorytm'
+                    : 'Wiele algorytmów'
+                }) <br/> Data: ${getNowTimeInNiceFormat()} <br/> Algorytm: ${
+                  selAlgo.name
+                }, [${params.map(param => param.value)}]<br/> Funkcja: ${
+                  selFitfuns[index].name
+                }, Wymiar: ${
+                  selFitfuns[index].domain
+                }<br/> XBest: [${res.xBestValue.join(', ')}], FBest: ${
+                  res.fBestValue
+                }`
+            )
 
-          setAllResponses(prevResponses => [
-            ...formattedResponses,
-            ...prevResponses,
-          ])
+            setAllResponses(prevResponses => [
+              ...formattedResponses,
+              ...prevResponses,
+            ])
 
-          console.log(
-            selFitfuns.map(fun => ({
-              name: fun.name,
-              domain: fun.domain,
-            }))
+            // console.log(
+            //   selFitfuns.map(fun => ({
+            //     name: fun.name,
+            //     domain: fun.domain,
+            //   }))
+            // )
+            console.log('Response from server:', response.data)
+          })
+          .catch(error => {
+            showNotificationStart(
+              'There was an error sending the request',
+              'error'
+            )
+            console.error('There was an error sending the POST request:', error)
+            setIsInProgress(false)
+          })
+      } else {
+        const algoParams = [
+          ...params.map(param => param.value),
+          iterations,
+          population,
+        ]
+        // console.log(algoParams)
+        axios
+          .post(
+            apiURL + endpointRun,
+            {
+              algorithmName: selAlgo.name,
+              fitnessFunctions: selFitfuns.map(fun => ({
+                name: fun.name,
+                domain: fun.domain,
+              })),
+              parameters: algoParams,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
           )
-          console.log('Response from server:', response.data)
-        })
-        .catch(error => {
-          showNotificationStart(
-            'There was an error sending the request',
-            'error'
-          )
-          console.error('There was an error sending the POST request:', error)
-          setIsInProgress(false)
-        })
+          .then(response => {
+            setIsInProgress(false)
+            const formattedResponses = response.data.response.map(
+              (res, index) =>
+                `(${
+                  testMode === testModeEnum.SINGLE_ALGORITHM
+                    ? 'Pojedynczy algorytm'
+                    : 'Wiele algorytmów'
+                }) <br/> Data: ${getNowTimeInNiceFormat()} <br/> Algorytm: ${
+                  selAlgo.name
+                }, [${params.map(param => param.value)}]<br/> Funkcja: ${
+                  selFitfuns[index].name
+                }, Wymiar: ${
+                  selFitfuns[index].domain
+                }<br/> XBest: [${res.xBestValue.join(', ')}], FBest: ${
+                  res.fBestValue
+                }`
+            )
+
+            setAllResponses(prevResponses => [
+              ...formattedResponses,
+              ...prevResponses,
+            ])
+
+            console.log(
+              selFitfuns.map(fun => ({
+                name: fun.name,
+                domain: fun.domain,
+              }))
+            )
+            console.log('Response from server:', response.data)
+          })
+          .catch(error => {
+            showNotificationStart(
+              'There was an error sending the request',
+              'error'
+            )
+            console.error('There was an error sending the POST request:', error)
+            setIsInProgress(false)
+          })
+      }
     } else if (testMode === testModeEnum.MULTIPLE_ALGORITHMS) {
       setIsInProgress(true)
       axios
